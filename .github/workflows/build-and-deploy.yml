@@ -1,7 +1,7 @@
 name: Build and Deploy to Skynet
 
 on:
-  push:
+  create:
     tags: 
       - v[12].[0-9]+.[0-9]+
 
@@ -33,11 +33,8 @@ jobs:
       run: yarn run build
     - name: Deploy to Skynet
         uses: SkynetLabs/deploy-to-skynet-action@v2
-        with:
-          upload-dir: build 
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          registry-seed: ${{ secrets.REGISTRY_SEED || '' }}
-          registry-datakey: ${{ secrets.REGISTRY_DATAKEY || '' }}
-      
-
-    
+        with: 
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          registry-datakey: "${{ secrets.REGISTRY_DATAKEY || '' }}"
+          registry-seed: "${{ secrets.REGISTRY_SEED || '' }}"
+          upload-dir: build
