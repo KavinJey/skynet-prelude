@@ -1,3 +1,16 @@
+# [1.3.0](https://github.com/KavinJey/skynet-prelude/compare/v1.2.0...v1.3.0) (2021-11-13)
+
+
+### Bug Fixes
+
+* redid yarn lock; ([26b5ddb](https://github.com/KavinJey/skynet-prelude/commit/26b5ddbbcfdcdac309c87636f0673fb017e6b1d6))
+* removing locks; ([5a379ec](https://github.com/KavinJey/skynet-prelude/commit/5a379ec04c2c971b435d06ca161742e8f5fb91b5))
+
+
+### Features
+
+* deploy action ([0b61bcb](https://github.com/KavinJey/skynet-prelude/commit/0b61bcbdc1402b1e1550c170a5d27df5a2371398))
+
 # [1.2.0](https://github.com/KavinJey/skynet-prelude/compare/v1.1.0...v1.2.0) (2021-11-13)
 
 
