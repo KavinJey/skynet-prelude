@@ -1,8 +1,8 @@
 name: Build and Deploy to Skynet
 
 on:
-  create:
-    tags: 
+  push:
+    tags:
       - v[12].[0-9]+.[0-9]+
 
 env:
@@ -13,27 +13,26 @@ jobs:
     name: Build and Deploy to Skynet
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 
-        persist-credentials: false
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "yarn"
 
-    - name: Set up Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-        cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
 
-    - name: Install dependencies
-      run: yarn install
-
-    - name: Build
-      run: yarn run build
-    - name: Deploy to Skynet
+      - name: Build
+        run: yarn run build
+      - name: Deploy to Skynet
         uses: SkynetLabs/deploy-to-skynet-action@v2
-        with: 
+        with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           registry-datakey: "${{ secrets.REGISTRY_DATAKEY || '' }}"
           registry-seed: "${{ secrets.REGISTRY_SEED || '' }}"

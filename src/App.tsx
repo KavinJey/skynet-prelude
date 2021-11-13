@@ -4,7 +4,6 @@ import MessageDisplay from "./components/MessageDisplay";
 import {
   Home,
   Playlists,
-  Upload,
   Library,
   RecentlyPlayed,
   Search,
@@ -14,6 +13,7 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { SkynetProvider } from "./state/SkynetContext";
 import { StoreProvider } from "easy-peasy";
 import { store } from "./state/store";
+import Todo from "./pages/Todo";
 
 const App = () => {
   return (
@@ -27,21 +27,22 @@ const App = () => {
               <Route path="/playlists">
                 <Playlists />
               </Route>
-              <Route path="/upload">
-                <Upload />
-              </Route>
               <Route path="/library">
                 <Library />
               </Route>
               <Route path="/recently-played">
                 <RecentlyPlayed />
               </Route>
-              <Route path="/search">
+              {/* <Route path="/search">
                 <Search />
-              </Route>
+              </Route> */}
               <Route path="/profile">
                 <Profile />
               </Route>
+
+              {/* <Route path="/todo">
+                <Todo />
+              </Route> */}
               <Route path="/">
                 <Home />
               </Route>

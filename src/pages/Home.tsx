@@ -5,7 +5,7 @@ const HomepageHeading = ({ mobile }) => (
   <Container text>
     <Header
       as="h1"
-      content="Imagine a Template"
+      content="You're an artist and need a space to keep your WIP tunes."
       inverted
       style={{
         fontSize: mobile ? "2em" : "4em",
@@ -16,7 +16,7 @@ const HomepageHeading = ({ mobile }) => (
     />
     <Header
       as="h2"
-      content="That solved your todo list needs."
+      content="Introducing Prelude - a web app to manage, share and collaborate on tracks without stress."
       inverted
       style={{
         fontSize: mobile ? "1.5em" : "1.7em",
@@ -25,7 +25,7 @@ const HomepageHeading = ({ mobile }) => (
         marginBottom: mobile ? "0.5em" : "1.5em",
       }}
     />
-    <Button color="green" size="huge" as={NavLink} to="todo">
+    <Button color="purple" size="huge" as={NavLink} to="library">
       Get Started
       {/* @ts-ignore */}
       <Icon name="right arrow" />
@@ -37,7 +37,7 @@ const Home = () => {
   return (
     <Segment
       inverted
-      color="grey"
+      color="pink"
       textAlign="center"
       style={{ minHeight: 700, padding: "1em 0em" }}
       vertical

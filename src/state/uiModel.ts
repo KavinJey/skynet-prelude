@@ -7,7 +7,13 @@ import _ from "underscore";
 export const uiModel = {
   error: null,
   messages: [
-    { message: "hello", negative: false, dismissed: false, id: "fake" },
+    {
+      message:
+        "Welcome to Prelude Music Player! \n\n Use the upload tab to upload your music. \n My library allows you to view all your uploaded audio files and play them through the play bar.",
+      negative: false,
+      dismissed: false,
+      id: "fake",
+    },
   ],
 
   setError: action((state, { message }) => {

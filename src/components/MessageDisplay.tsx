@@ -24,7 +24,7 @@ const MessageList = ({ messages, dismissMessage }) => {
             floating
             negative={negative}
           >
-            {message}
+            <p> {message} </p>
           </Message>
         </Transition>
       </div>
