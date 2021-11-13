@@ -1,6 +1,6 @@
 # Prelude Music Player for Skynet 
 
-[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/CACdjAC5W0n5-0M_dm8bUpw7HOU1869KqYfjiE47QZ-giQ) 
+[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA) 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
