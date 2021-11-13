@@ -10,7 +10,7 @@ import {
 import Logo from "../assets/logo.png";
 
 const HomepageHeading = ({ mobile }) => (
-  <Container text style={{paddingBottom: '3em'}}>
+  <Container text style={{ paddingBottom: "3em" }}>
     <Header
       as="h1"
       content="You're an artist and need a space to keep your WIP tunes."
@@ -34,12 +34,12 @@ const HomepageHeading = ({ mobile }) => (
       }}
     />
 
-    <Image src={Logo} width="65%" style={{margin: '0 auto' }} />
+    <Image src={Logo} width="65%" style={{ margin: "0 auto" }} />
 
-    <p style={{ fontSize: mobile ? "1.2em" : "1.4em", marginTop: '2em' }}>
+    <p style={{ fontSize: mobile ? "1.2em" : "1.4em", marginTop: "2em" }}>
       A web app to manage, share and collaborate on tracks without stress
     </p>
-    <Button color="purple" size="huge" as={NavLink} to="library" >
+    <Button color="purple" size="huge" as={NavLink} to="library">
       Get Started
       {/* @ts-ignore */}
       <Icon name="right arrow" />
