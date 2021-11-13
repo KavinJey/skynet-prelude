@@ -20,7 +20,7 @@ const panes = [
         </Header>
         <p> Your collection of files uploaded.</p>
       </Tab.Pane>
-    )
+    ),
   },
 
   {

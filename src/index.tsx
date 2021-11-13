@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import 'semantic-ui-less/semantic.less'
+import "semantic-ui-less/semantic.less";
 // import 'fomantic-ui-css/semantic.css';
 
 ReactDOM.render(

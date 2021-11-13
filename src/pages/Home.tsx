@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Header, Container, Button, Icon, Segment } from "semantic-ui-react";
 
 const HomepageHeading = ({ mobile }) => (
-  <Container text >
+  <Container text>
     <Header
       as="h1"
       content="You're an artist and need a space to keep your WIP tunes."

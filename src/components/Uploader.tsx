@@ -114,7 +114,7 @@ const Uploader = ({ uploadMode }) => {
   const { client } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
   const [files, setFiles] = useState([]);
-  const acceptedFormats = ['audio/mpeg']
+  const acceptedFormats = ["audio/mpeg"];
 
   const handleDrop = async (acceptedFiles) => {
     if (mode === "directory" && acceptedFiles.length) {
@@ -146,16 +146,17 @@ const Uploader = ({ uploadMode }) => {
     };
 
     acceptedFiles.forEach((file) => {
-        console.log(acceptedFormats.includes(file.type))
-        console.log(file.type)
-      if (!(acceptedFormats.includes(file.type))) {
+      console.log(acceptedFormats.includes(file.type));
+      console.log(file.type);
+      if (!acceptedFormats.includes(file.type)) {
         onFileStateChange(file, {
-            status: 'error',
-            error: 'This file is not an supported format. Currently support mp3s.'
-        })
+          status: "error",
+          error:
+            "This file is not an supported format. Currently support mp3s.",
+        });
 
         return;
-      } 
+      }
       const onUploadProgress = (progress) => {
         const status = progress === 1 ? "processing" : "uploading";
 
