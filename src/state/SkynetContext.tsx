@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createContext, useState, useEffect } from "react";
 import { SkynetClient } from "skynet-js";
 
