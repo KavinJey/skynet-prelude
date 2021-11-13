@@ -4,8 +4,15 @@ import ReactDOM from "react-dom";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import "react-jinke-music-player/assets/index.css";
 import PreludeMusicBar from "../components/PreludeMusicBar";
-const Home = () => {
-  return <PreludeMusicBar></PreludeMusicBar>;
+
+
+const Library = () => {
+  return  (
+      <Container>
+
+        <PreludeMusicBar />
+      </Container>
+  );
 };
 
-export default Home;
+export default Library;

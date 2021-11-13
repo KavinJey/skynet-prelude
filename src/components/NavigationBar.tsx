@@ -1,7 +1,8 @@
-import { Container, Menu, Icon, Rail } from "semantic-ui-react";
+import { Container, Menu, Icon, Rail, Image } from "semantic-ui-react";
 import { NavLink, useLocation } from "react-router-dom";
 import MySkyButton from "./MySkyButton";
 import MessageDisplay from "./MessageDisplay";
+import Logo from '../assets/logo192.png'
 
 const NavMenuItem = ({ title, route, currentRoute }) => {
   const active = currentRoute === `/${route}`;
@@ -17,11 +18,11 @@ const NavigationBar = () => {
 
   return (
     <Container>
-      <Menu fixed="top" inverted>
+      <Menu fixed="top">
         <Container>
           <Menu.Item header>
-            <Icon circular inverted color="teal" name="gem" />
-            Very Cool Skapp
+              <Image src={Logo} width="75" style={{marginRight: '2em'}}  />
+              Prelude Music Player
           </Menu.Item>
           <NavMenuItem
             title="Home"

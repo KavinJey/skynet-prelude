@@ -114,6 +114,7 @@ const Uploader = ({ uploadMode }) => {
   const { client } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
   const [files, setFiles] = useState([]);
+  const acceptedFormats = ['audio/mpeg']
 
   const handleDrop = async (acceptedFiles) => {
     if (mode === "directory" && acceptedFiles.length) {
@@ -145,6 +146,15 @@ const Uploader = ({ uploadMode }) => {
     };
 
     acceptedFiles.forEach((file) => {
+        console.log(acceptedFormats.includes(file.type))
+      if (!(acceptedFormats.includes(file.type))) {
+        onFileStateChange(file, {
+            status: 'error',
+            error: 'This file is not an supported format. Currently support mp3s.'
+        })
+
+        return;
+      } 
       const onUploadProgress = (progress) => {
         const status = progress === 1 ? "processing" : "uploading";
 
@@ -229,7 +239,7 @@ const Uploader = ({ uploadMode }) => {
             <Header as="h3">
               <Icon name="add" size="large" />
               {mode === "file" &&
-                "Add or drop your files here to pin to Skynet"}
+                "Add or drop your music files here to pin to Skynet and access through the player."}
               {mode === "directory" &&
                 "Add or drop your build folder here to deploy to Skynet"}
             </Header>

@@ -14,6 +14,7 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { SkynetProvider } from "./state/SkynetContext";
 import { StoreProvider } from "easy-peasy";
 import { store } from "./state/store";
+import Todo from "./pages/Todo";
 
 const App = () => {
   return (
@@ -41,6 +42,10 @@ const App = () => {
               </Route>
               <Route path="/profile">
                 <Profile />
+              </Route>
+
+              <Route path="/todo">
+                <Todo />
               </Route>
               <Route path="/">
                 <Home />

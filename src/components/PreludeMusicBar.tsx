@@ -142,14 +142,12 @@ const PreludeMusicBar = () => {
     },
   ];
   return (
-    <Container>
       <ReactJkMusicPlayer
         audioLists={audioList}
         autoPlay={false}
         mode={"full"}
         showDownload={false}
       />
-    </Container>
   );
 };
 
