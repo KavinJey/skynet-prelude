@@ -44,11 +44,11 @@ const NavigationBar = () => {
             route="playlists"
             currentRoute={location.pathname}
           />
-          <NavMenuItem
+          {/* <NavMenuItem
             title="Search"
             route="search"
             currentRoute={location.pathname}
-          />
+          /> */}
           <NavMenuItem
             title="Profile"
             route="profile"

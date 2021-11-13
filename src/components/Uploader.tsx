@@ -147,6 +147,7 @@ const Uploader = ({ uploadMode }) => {
 
     acceptedFiles.forEach((file) => {
         console.log(acceptedFormats.includes(file.type))
+        console.log(file.type)
       if (!(acceptedFormats.includes(file.type))) {
         onFileStateChange(file, {
             status: 'error',

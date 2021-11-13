@@ -5,5 +5,8 @@
 @primaryColor: #d709f3;
 @pageBackground: #413d5c;
 
+@pink: #d709f3;
+
+
 @headerFont        : @fontName, 'Fredoka One', cursive;
 @pageFont          : @fontName, 'Lato', Arial, Helvetica, sans-serif;
