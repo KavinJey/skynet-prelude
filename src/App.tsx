@@ -1,19 +1,19 @@
-import { Container, Header, Rail } from 'semantic-ui-react';
-import NavigationBar from './components/NavigationBar';
-import MessageDisplay from './components/MessageDisplay';
+import { Container, Header, Rail } from "semantic-ui-react";
+import NavigationBar from "./components/NavigationBar";
+import MessageDisplay from "./components/MessageDisplay";
 import {
   Home,
-  Todo,
+  Playlists,
   Upload,
   Library,
   RecentlyPlayed,
-  Deploy,
+  Search,
   Profile,
-} from './pages';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
-import { SkynetProvider } from './state/SkynetContext';
-import { StoreProvider } from 'easy-peasy';
-import { store } from './state/store';
+} from "./pages";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { SkynetProvider } from "./state/SkynetContext";
+import { StoreProvider } from "easy-peasy";
+import { store } from "./state/store";
 
 const App = () => {
   return (
@@ -24,8 +24,8 @@ const App = () => {
           <Container>
             <MessageDisplay />
             <Switch>
-              <Route path="/todo">
-                <Todo />
+              <Route path="/playlists">
+                <Playlists />
               </Route>
               <Route path="/upload">
                 <Upload />
@@ -36,8 +36,8 @@ const App = () => {
               <Route path="/recently-played">
                 <RecentlyPlayed />
               </Route>
-              <Route path="/deploy">
-                <Deploy />
+              <Route path="/search">
+                <Search />
               </Route>
               <Route path="/profile">
                 <Profile />

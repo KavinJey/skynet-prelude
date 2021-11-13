@@ -1,3 +1,5 @@
+//  @ts-nocheck
+// TODO: make typesafe
 import {
   Sidebar,
   Container,
@@ -8,9 +10,9 @@ import {
   Button,
   Sticky,
   Rail,
-} from 'semantic-ui-react';
-import { useStoreState, useStoreActions } from 'easy-peasy';
-import { useState, useEffect } from 'react';
+} from "semantic-ui-react";
+import { useStoreState, useStoreActions } from "easy-peasy";
+import { useState, useEffect } from "react";
 
 const MessageList = ({ messages, dismissMessage }) => {
   const messageItems = messages.map(({ message, negative, dismissed, id }) => {
@@ -38,7 +40,7 @@ const MessageDisplay = () => {
     (actions) => actions.ui
   );
   const [visible, setVisible] = useState(false);
-  const [errorText, setErrorText] = useState('Default Error Text');
+  const [errorText, setErrorText] = useState("Default Error Text");
 
   useEffect(() => {
     if (error) {
@@ -51,7 +53,7 @@ const MessageDisplay = () => {
 
   return (
     <Rail internal position="right">
-      <Segment basic style={{ marginTop: '70px' }} />
+      <Segment basic style={{ marginTop: "70px" }} />
       <MessageList messages={messages} dismissMessage={dismissMessage} />
     </Rail>
   );

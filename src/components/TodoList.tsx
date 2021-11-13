@@ -1,5 +1,7 @@
-import { Checkbox, List, Button, Loader } from 'semantic-ui-react';
-import { useStoreState, useStoreActions } from 'easy-peasy';
+//  @ts-nocheck
+// TODO: make typesafe
+import { Checkbox, List, Button, Loader } from "semantic-ui-react";
+import { useStoreState, useStoreActions } from "easy-peasy";
 
 const TodoList = () => {
   const todoItems = useStoreState((state) => state.todos.todoItems);

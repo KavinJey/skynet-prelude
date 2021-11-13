@@ -1,8 +1,9 @@
-import { createStore } from 'easy-peasy';
-import { todoModel } from './todoModel';
-import { hnsModel } from './hnsModel';
-import { mySkyModel } from './mySkyModel';
-import { uiModel } from './uiModel';
+import { createStore } from "easy-peasy";
+import { todoModel } from "./todoModel";
+import { hnsModel } from "./hnsModel";
+import { mySkyModel } from "./mySkyModel";
+import { uiModel } from "./uiModel";
+import { musicPlayerModel } from "./musicPlayerModel";
 
 export const store = createStore(
   {
@@ -10,6 +11,7 @@ export const store = createStore(
     todos: todoModel,
     hns: hnsModel,
     ui: uiModel,
+    music: musicPlayerModel,
   },
   { version: 1 }
 );

@@ -33,7 +33,7 @@ const HomepageHeading = ({ mobile }) => (
   </Container>
 );
 
-const Home = () => {
+const Playlists = () => {
   return (
     <Segment
       inverted
@@ -51,4 +51,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Playlists;

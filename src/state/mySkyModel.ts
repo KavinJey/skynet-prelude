@@ -1,4 +1,6 @@
-import { action, thunk, thunkOn, computed } from 'easy-peasy';
+//  @ts-nocheck
+// TODO: make typesafe
+import { action, thunk, thunkOn, computed } from "easy-peasy";
 
 export const mySkyModel = {
   // MySky State
@@ -51,8 +53,8 @@ export const mySkyModel = {
       const mySky = getStoreState().mySky.mySky;
 
       if (mySky) {
-        console.log('persisting to MySky');
-        await mySky.setJSON('localhost/todos', { todos });
+        console.log("persisting to MySky");
+        await mySky.setJSON("localhost/todos", { todos });
       }
     }
   ),
@@ -67,8 +69,8 @@ export const mySkyModel = {
       const mySky = getStoreState().mySky.mySky;
 
       if (mySky) {
-        console.log('persisting HNS entries to MySky');
-        await mySky.setJSON('localhost/hnsEntries.json', { hnsEntries });
+        console.log("persisting HNS entries to MySky");
+        await mySky.setJSON("localhost/hnsEntries.json", { hnsEntries });
       }
     }
   ),

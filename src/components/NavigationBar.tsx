@@ -1,7 +1,7 @@
-import { Container, Menu, Icon, Rail } from 'semantic-ui-react';
-import { NavLink, useLocation } from 'react-router-dom';
-import MySkyButton from './MySkyButton';
-import MessageDisplay from './MessageDisplay';
+import { Container, Menu, Icon, Rail } from "semantic-ui-react";
+import { NavLink, useLocation } from "react-router-dom";
+import MySkyButton from "./MySkyButton";
+import MessageDisplay from "./MessageDisplay";
 
 const NavMenuItem = ({ title, route, currentRoute }) => {
   const active = currentRoute === `/${route}`;
@@ -29,8 +29,8 @@ const NavigationBar = () => {
             currentRoute={location.pathname}
           />
           <NavMenuItem
-            title="Todo"
-            route="todo"
+            title="My Library"
+            route="library"
             currentRoute={location.pathname}
           />
           <NavMenuItem
@@ -39,18 +39,13 @@ const NavigationBar = () => {
             currentRoute={location.pathname}
           />
           <NavMenuItem
-            title="Library"
-            route="library"
+            title="Playlists"
+            route="playlists"
             currentRoute={location.pathname}
           />
           <NavMenuItem
-            title="Recently Played"
-            route="recently-played"
-            currentRoute={location.pathname}
-          />
-          <NavMenuItem
-            title="Deploy"
-            route="deploy"
+            title="Search"
+            route="search"
             currentRoute={location.pathname}
           />
           <NavMenuItem
