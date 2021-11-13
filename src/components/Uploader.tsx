@@ -238,7 +238,7 @@ const Uploader = ({ uploadMode }) => {
         <input {...getInputProps()} />
         <Container textAlign="center">
           <Segment stacked>
-            <Header as="h3">
+            <Header as="h3" color="grey">
               <Icon name="add" size="large" />
               {mode === "file" &&
                 "Add or drop your music files here to pin to Skynet and access through the player."}

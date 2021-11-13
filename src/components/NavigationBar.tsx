@@ -2,7 +2,7 @@ import { Container, Menu, Icon, Rail, Image } from "semantic-ui-react";
 import { NavLink, useLocation } from "react-router-dom";
 import MySkyButton from "./MySkyButton";
 import MessageDisplay from "./MessageDisplay";
-import Logo from "../assets/logo192.png";
+import Logo from "../assets/logo.png";
 
 const NavMenuItem = ({ title, route, currentRoute }) => {
   const active = currentRoute === `/${route}`;
@@ -21,8 +21,8 @@ const NavigationBar = () => {
       <Menu fixed="top">
         <Container>
           <Menu.Item header>
-            <Image src={Logo} width="75" style={{ marginRight: "2em" }} />
-            Prelude Music Player
+            <Image src={Logo} width="150" style={{ marginRight: "2em" }} />
+            Music Player
           </Menu.Item>
           <NavMenuItem
             title="Home"
@@ -32,11 +32,6 @@ const NavigationBar = () => {
           <NavMenuItem
             title="My Library"
             route="library"
-            currentRoute={location.pathname}
-          />
-          <NavMenuItem
-            title="Upload"
-            route="upload"
             currentRoute={location.pathname}
           />
           <NavMenuItem
@@ -57,6 +52,9 @@ const NavigationBar = () => {
           <Menu.Menu position="right">
             <Menu.Item>
               <MySkyButton />
+            </Menu.Item>
+            <Menu.Item>
+              <Image as="a" src="https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d" href="https://homescreen.hns.siasky.net/#/skylink/AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA" />
             </Menu.Item>
           </Menu.Menu>
         </Container>

@@ -7,6 +7,9 @@
 
 @pink: #d709f3;
 
+@fontName          : 'Lato';
+@fontSmoothing     : antialiased;
 
-@headerFont        : @fontName, 'Fredoka One', cursive;
-@pageFont          : @fontName, 'Lato', Arial, Helvetica, sans-serif;
+
+@headerFont        : 'Fredoka One', cursive;
+@pageFont          : @fontName, 'Lato', sans-serif;

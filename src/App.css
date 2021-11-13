@@ -2,6 +2,18 @@
   text-align: center;
 }
 
+@font-face {
+  font-family: 'Lato', sans-serif;
+  src: local('Lato'),
+       url('../src/assets/fonts/Lato/Lato-Regular.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: 'Fredoka One', cursive;
+  src: local('Fredoka One'),
+       url('../src/assets/fonts/Fredoka_One/FredokaOne-Regular.ttf') format("truetype");
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
