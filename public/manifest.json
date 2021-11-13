@@ -21,5 +21,7 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#392759",
-  "background_color": "##76F7BF"
+  "background_color": "##76F7BF",
+  "description": "A Personal Music Player for use on Skynet",
+  "skylink": "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA"
 }
