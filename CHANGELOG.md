@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/KavinJey/skynet-prelude/compare/v1.3.0...v1.4.0) (2021-11-13)
+
+
+### Features
+
+* adding styling for semantic-ui ([92c6f13](https://github.com/KavinJey/skynet-prelude/commit/92c6f13a647cfe165681b4c7accad2d17dadcd0b))
+* styling and library is complete ([0d8fd5c](https://github.com/KavinJey/skynet-prelude/commit/0d8fd5c8985517b86445ec4244582133dbab104c))
+
 # [1.3.0](https://github.com/KavinJey/skynet-prelude/compare/v1.2.0...v1.3.0) (2021-11-13)
 
 
