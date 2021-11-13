@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# Prelude Music Player for Skynet 
+
+[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/[skylink]) 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
