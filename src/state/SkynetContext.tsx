@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { createContext, useState, useEffect } from "react";
 import { SkynetClient } from "skynet-js";
+import { FileSystemDAC } from "fs-dac-library";
 
 // To import DAC, uncomment here, and 2 spots below.
 // import { ContentRecordDAC } from '@skynetlabs/content-record-library';
@@ -19,10 +20,11 @@ const client = new SkynetClient(portal);
 // For now, we won't use any DACs -- uncomment to create
 // const contentRecord = new ContentRecordDAC();
 const contentRecord = null;
+const fileSystem = new FileSystemDAC();
 const userProfile = new UserProfileDAC();
 
 const dataDomain =
-  window.location.hostname === "localhost" ? "localhost" : "appName.hns";
+  window.location.hostname === "localhost" ? "localhost" : "sia://AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA";
 
 const SkynetProvider = ({ children }) => {
   const [skynetState, setSkynetState] = useState({
@@ -30,6 +32,7 @@ const SkynetProvider = ({ children }) => {
     mySky: null,
     contentRecord,
     userProfile,
+    fileSystem,
     dataDomain,
   });
 
@@ -47,7 +50,8 @@ const SkynetProvider = ({ children }) => {
         // load necessary DACs and permissions
         // Uncomment line below to load DACs
         // await mySky.loadDacs(contentRecord);
-        await mySky.loadDacs(userProfile);
+        await mySky.loadDacs([userProfile, fileSystem]);
+        
 
         // replace mySky in state object
         setSkynetState({ ...skynetState, mySky });
