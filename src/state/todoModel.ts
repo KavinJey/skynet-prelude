@@ -27,24 +27,24 @@ export const todoModel = {
     state.todoItems = todos;
   }),
 
-  // Todo Thunks
-  onLoginChange: thunkOn(
-    (actions, storeActions) => storeActions.mySky.setUserID,
-    async (actions, target) => {
-      actions.clearTodos();
+//   // Todo Thunks
+//   onLoginChange: thunkOn(
+//     (actions, storeActions) => storeActions.mySky.setUserID,
+//     async (actions, target) => {
+//       actions.clearTodos();
 
-      // logging in, call loadTodos
-      if (target.payload.userID) {
-        actions.setLoading({ isLoading: true });
-        const mySky = target.payload.mySky;
-        const { data } = await mySky.getJSON("localhost/todos");
-        if (data) {
-          actions.loadTodos({ todos: data.todos });
-        } else {
-          await mySky.setJSON("localhost/todos", { todos: [] });
-        }
-        actions.setLoading({ isLoading: false });
-      }
-    }
-  ),
+//       // logging in, call loadTodos
+//       if (target.payload.userID) {
+//         actions.setLoading({ isLoading: true });
+//         const mySky = target.payload.mySky;
+//         const { data } = await mySky.getJSON("localhost/todos");
+//         if (data) {
+//           actions.loadTodos({ todos: data.todos });
+//         } else {
+//           await mySky.setJSON("localhost/todos", { todos: [] });
+//         }
+//         actions.setLoading({ isLoading: false });
+//       }
+//     }
+//   ),
 };

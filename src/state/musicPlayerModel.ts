@@ -1,7 +1,7 @@
+
 // @ts-nocheck
 // AudioFile: make typesafe`
-import { Action, action, State, StateMapper, thunk, thunkOn } from "easy-peasy";
-import { parseSkylink } from "skynet-js";
+import { action, thunkOn, actionOn } from "easy-peasy";
 import { _Pick } from "underscore";
 
 const songModel = {
@@ -22,6 +22,7 @@ export interface IMusicPlayerModel {
 export const musicPlayerModel = {
   // AudioFile State
   loading: false,
+  audioPlayerInstance: "",
   personalLibrary: [],
   audioFileItems: [],
   currentQueue: [
@@ -169,7 +170,13 @@ export const musicPlayerModel = {
   }),
   addAudioFile: action(
     (state, { songName, songArtist, cover, srcLink, done }) => {
-      state.audioFileItems.push({ songName, songArtist, cover, srcLink, done });
+      state.audioFileItems.push({
+        songName,
+        songArtist,
+        cover,
+        srcLink,
+        done,
+      });
     }
   ),
   deleteAudioFile: action((state, payload) => {
@@ -186,16 +193,62 @@ export const musicPlayerModel = {
     state.audioFileItems = audioFileItems;
   }),
 
+  playSong: action((state, song: { name; singer; cover; musicSrc }) => {
+    state.currentQueue.push(song);
+  }),
+  onPlaySong: actionOn(
+    (actions, storeActions) => [actions.playSong],
+    (state, target) => {
+      state.currentQueue = [state.currentQueue.slice(-1).pop];
+    }
+  ),
+  clearQueue: action((state) => {
+    state.currentQueue = [];
+  }),
+
+  addAudioPlayerInstance: action((state, { audioPlayerInstance }) => {
+    console.log("this is the instance");
+    console.log(audioPlayerInstance);
+    state.audioPlayerInstance = audioPlayerInstance;
+  }),
+
+  addSongLink: action((state, { srcLink, browserUrl }) => {
+    const songIndex = state.audioFileItems.findIndex(
+      (audioFile) => audioFile.srcLink === srcLink
+    );
+    state.audioFileItems[songIndex].browserUrl = browserUrl;
+  }),
+
+//   onAddSong: thunk(
+//     (actions, storeActions, {getStoreState, getStoreActions}) => actions.addAudioFile,
+//     async (actions, target) => {
+//       const srcLink = target.payload.srcLink;
+//       const mySky = getStoreState().mySky.mySky;
+
+//       if (mySky) {
+//         actions.setLoading({ isLoading: true });
+//         const browserUrl = await mySky.getSkylinkUrl(srcLink);
+//         actions.addSongLink({ srcLink, browserUrl });
+//       } else {
+//         const { throwError } = getStoreActions().ui;
+//         throwError({
+//           action: "createEntry",
+//           message: "Not able to convert skylink to portal",
+//         });
+//       }
+//     }
+//   ),
+
   // Todo Thunks
   onLoginChange: thunkOn(
     (actions, storeActions) => storeActions.mySky.setUserID,
     async (actions, target) => {
-      actions.clearAudioFiles();
-
-      // logging in, call loadTodos
+      // logging in, call loadAudioFiles
       if (target.payload.userID) {
         actions.setLoading({ isLoading: true });
         const mySky = target.payload.mySky;
+        console.log("THIS IS MYSKY OBJ");
+        console.log(mySky);
         const { data } = await mySky.getJSON("localhost/prelude");
         console.log("THIS IS THE DATA COMING BACK FROM MYSKY");
         console.log(data);

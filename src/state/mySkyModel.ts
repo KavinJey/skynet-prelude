@@ -42,22 +42,6 @@ export const mySkyModel = {
     await mySky.logout();
     actions.setUserID({ userID: null });
   }),
-  persistTodoState: thunkOn(
-    (actions, storeActions) => [
-      storeActions.todos.addTodo,
-      storeActions.todos.updateTodo,
-      storeActions.todos.deleteTodo,
-    ],
-    async (actions, target, { getStoreState }) => {
-      const todos = getStoreState().todos.todoItems;
-      const mySky = getStoreState().mySky.mySky;
-
-      if (mySky) {
-        console.log("persisting to MySky");
-        await mySky.setJSON("localhost/todos", { todos });
-      }
-    }
-  ),
   persistPreludeState: thunkOn(
     (actions, storeActions) => [
         storeActions.music.addAudioFile,
@@ -65,30 +49,30 @@ export const mySkyModel = {
         storeActions.deleteAudioFile
     ],
     async (actions, target, { getStoreState }) => {
-        const preludeLibrary = getStoreState().music.audioFileItems
+        const audioFileItems  = getStoreState().music.audioFileItems
         const mySky = getStoreState().mySky.mySky;
         
         if (mySky) {
             console.log('persisting audio files to MySky')
-            await mySky.setJSON('localhost/prelude.json', { preludeLibrary })
+            await mySky.setJSON('localhost/prelude.json', { audioFileItems })
         } 
 
     }
-  ),
-  persistHNSEntriesState: thunkOn(
-    (actions, storeActions) => [
-      storeActions.hns.addEntry,
-      storeActions.hns.updateEntry,
-      storeActions.hns.deleteEntry,
-    ],
-    async (actions, target, { getStoreState }) => {
-      const hnsEntries = getStoreState().hns.hnsEntries;
-      const mySky = getStoreState().mySky.mySky;
+  )
+//   persistHNSEntriesState: thunkOn(
+//     (actions, storeActions) => [
+//       storeActions.hns.addEntry,
+//       storeActions.hns.updateEntry,
+//       storeActions.hns.deleteEntry,
+//     ],
+//     async (actions, target, { getStoreState }) => {
+//       const hnsEntries = getStoreState().hns.hnsEntries;
+//       const mySky = getStoreState().mySky.mySky;
 
-      if (mySky) {
-        console.log("persisting HNS entries to MySky");
-        await mySky.setJSON("localhost/hnsEntries.json", { hnsEntries });
-      }
-    }
-  ),
+//       if (mySky) {
+//         console.log("persisting HNS entries to MySky");
+//         await mySky.setJSON("localhost/hnsEntries.json", { hnsEntries });
+//       }
+//     }
+//   ),
 };

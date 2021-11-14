@@ -60,23 +60,23 @@ export const hnsModel = {
       });
     }
   ),
-  onLoginChange: thunkOn(
-    (actions, storeActions) => storeActions.mySky.setUserID,
-    async (actions, target) => {
-      actions.clearEntries();
+//   onLoginChange: thunkOn(
+//     (actions, storeActions) => storeActions.mySky.setUserID,
+//     async (actions, target) => {
+//       actions.clearEntries();
 
-      // logging in, call loadTodos
-      if (target.payload.userID) {
-        actions.setLoading({ isLoading: true });
-        const mySky = target.payload.mySky;
-        const { data } = await mySky.getJSON("localhost/hnsEntries.json");
-        if (data) {
-          actions.loadEntries({ hnsEntries: data.hnsEntries });
-        } else {
-          await mySky.setJSON("localhost/hnsEntries.json", { hnsEntries: [] });
-        }
-        actions.setLoading({ isLoading: false });
-      }
-    }
-  ),
+//       // logging in, call loadTodos
+//       if (target.payload.userID) {
+//         actions.setLoading({ isLoading: true });
+//         const mySky = target.payload.mySky;
+//         const { data } = await mySky.getJSON("localhost/hnsEntries.json");
+//         if (data) {
+//           actions.loadEntries({ hnsEntries: data.hnsEntries });
+//         } else {
+//           await mySky.setJSON("localhost/hnsEntries.json", { hnsEntries: [] });
+//         }
+//         actions.setLoading({ isLoading: false });
+//       }
+//     }
+//   ),
 };
