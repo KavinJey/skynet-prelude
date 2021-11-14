@@ -6,6 +6,7 @@ import { useDropzone } from "react-dropzone";
 import { SkynetContext } from "../state/SkynetContext";
 
 import { Container, Header, Icon, Progress, Segment } from "semantic-ui-react";
+import { useStoreActions } from "easy-peasy";
 
 const getFilePath = (file) => file.webkitRelativePath || file.path || file.name;
 
@@ -116,6 +117,10 @@ const Uploader = ({ uploadMode }) => {
   const [files, setFiles] = useState([]);
   const acceptedFormats = ["audio/mpeg"];
 
+  // TODO type safe this
+  // @ts-ignore
+  const addSong = useStoreActions((actions) => actions.music.addAudioFile)
+
   const handleDrop = async (acceptedFiles) => {
     if (mode === "directory" && acceptedFiles.length) {
       const rootDir = getRootDirectory(acceptedFiles[0]); // get the file path from the first file
@@ -190,11 +195,12 @@ const Uploader = ({ uploadMode }) => {
             );
           } else {
             response = await client.uploadFile(file, { onUploadProgress });
+            addSong({ srcLink: response })
           }
 
           const url = await client.getSkylinkUrl(response.skylink, {
             subdomain: mode === "directory",
-          });
+          })
 
           onFileStateChange(file, { status: "complete", url });
         } catch (error) {

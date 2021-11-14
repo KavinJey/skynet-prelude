@@ -58,6 +58,23 @@ export const mySkyModel = {
       }
     }
   ),
+  persistPreludeState: thunkOn(
+    (actions, storeActions) => [
+        storeActions.music.addAudioFile,
+        storeActions.music.updateAudioFile,
+        storeActions.deleteAudioFile
+    ],
+    async (actions, target, { getStoreState }) => {
+        const preludeLibrary = getStoreState().music.audioFileItems
+        const mySky = getStoreState().mySky.mySky;
+        
+        if (mySky) {
+            console.log('persisting audio files to MySky')
+            await mySky.setJSON('localhost/prelude.json', { preludeLibrary })
+        } 
+
+    }
+  ),
   persistHNSEntriesState: thunkOn(
     (actions, storeActions) => [
       storeActions.hns.addEntry,

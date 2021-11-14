@@ -50,8 +50,8 @@ const SkynetProvider = ({ children }) => {
         // load necessary DACs and permissions
         // Uncomment line below to load DACs
         // await mySky.loadDacs(contentRecord);
-        await mySky.loadDacs([userProfile, fileSystem]);
-        
+        await mySky.loadDacs(userProfile);
+        await mySky.loadDacs(fileSystem)
 
         // replace mySky in state object
         setSkynetState({ ...skynetState, mySky });
