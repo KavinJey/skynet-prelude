@@ -20,8 +20,9 @@ const client = new SkynetClient(portal);
 // For now, we won't use any DACs -- uncomment to create
 // const contentRecord = new ContentRecordDAC();
 const contentRecord = null;
-const fileSystem = new FileSystemDAC();
+
 const userProfile = new UserProfileDAC();
+const fileSystem = new FileSystemDAC();
 
 const dataDomain =
   window.location.hostname === "localhost" ? "localhost" : "sia://AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA";
@@ -51,7 +52,11 @@ const SkynetProvider = ({ children }) => {
         // Uncomment line below to load DACs
         // await mySky.loadDacs(contentRecord);
         await mySky.loadDacs(userProfile);
-        await mySky.loadDacs(fileSystem)
+
+        // await mySky.loadDacs(fileSystem);
+
+
+
 
         // replace mySky in state object
         setSkynetState({ ...skynetState, mySky });

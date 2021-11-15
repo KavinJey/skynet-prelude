@@ -37,11 +37,11 @@ export const todoModel = {
 //       if (target.payload.userID) {
 //         actions.setLoading({ isLoading: true });
 //         const mySky = target.payload.mySky;
-//         const { data } = await mySky.getJSON("localhost/todos");
+//         const { data } = await mySky.getJSON("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/todos");
 //         if (data) {
 //           actions.loadTodos({ todos: data.todos });
 //         } else {
-//           await mySky.setJSON("localhost/todos", { todos: [] });
+//           await mySky.setJSON("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/todos", { todos: [] });
 //         }
 //         actions.setLoading({ isLoading: false });
 //       }

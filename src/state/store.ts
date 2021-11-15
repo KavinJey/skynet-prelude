@@ -8,8 +8,8 @@ import { musicPlayerModel } from "./musicPlayerModel";
 export const store  = createStore(
   {
     mySky: mySkyModel,
-    // todos: todoModel,
-    // hns: hnsModel,
+    todos: todoModel,
+    hns: hnsModel,
     ui: uiModel,
     music: musicPlayerModel,
   },

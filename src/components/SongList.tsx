@@ -50,7 +50,7 @@ const SongList = () => {
               playSong({
                 name: "new song",
                 singer: "me",
-                musicSrc: audioFile.srcLink,
+                musicSrc: audioFile.browserUrl,
                 cover:
                   "https://siasky.net/OADDYlbpBCusBIF8TdxUV99r48ZM6qRy_MTwfQ1DJA85mQ",
               });

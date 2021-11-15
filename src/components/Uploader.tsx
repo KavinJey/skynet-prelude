@@ -195,7 +195,8 @@ const Uploader = ({ uploadMode }) => {
             );
           } else {
             response = await client.uploadFile(file, { onUploadProgress });
-            addSong({ srcLink: response.skylink })
+            const browserUrl = await client.getSkylinkUrl(response.skylink)
+            addSong({ srcLink: response.skylink, browserUrl })
           }
 
           const url = await client.getSkylinkUrl(response.skylink, {

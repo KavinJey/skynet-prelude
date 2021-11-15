@@ -6,12 +6,18 @@ export const mySkyModel = {
   // MySky State
   userID: null, //only set through setUserID!
   mySky: null,
+  fileSystem: null,
   loggedIn: computed((state) => !!state.userID),
 
   // MySky Setters
   setMySky: action((state, { mySky }) => {
     state.mySky = mySky;
   }),
+
+  setFileSystem: action((state, { fileSystem }) => {
+    state.fileSystem = fileSystem; 
+  }),
+
   setValidUserID: action((state, { userID }) => {
     state.userID = userID;
   }),
@@ -50,15 +56,47 @@ export const mySkyModel = {
     ],
     async (actions, target, { getStoreState }) => {
         const audioFileItems  = getStoreState().music.audioFileItems
+        console.log('persisting the following', audioFileItems)
         const mySky = getStoreState().mySky.mySky;
         
         if (mySky) {
             console.log('persisting audio files to MySky')
-            await mySky.setJSON('localhost/prelude.json', { audioFileItems })
+            const result =  await mySky.setJSON('localhost/prelude.json', { audioFileItems })
+            console.log('result of clienc call', result)
         } 
 
     }
-  )
+  ),
+
+   onFileSystemSet: thunkOn(
+    (actions, storeActions) => actions.setFileSystem,
+    async (actions, { payload }, { getStoreActions, getStoreState }) => {
+      // logging in, call loadAudioFiles
+
+      const fs = payload.fileSystem.client 
+      
+      if (payload.userID) {
+        const setLoading = getStoreActions().music.setLoading;
+        setLoading({ isLoading: true });
+        
+        const res = await fs.getDirectoryIndex("localhost/prelude.json")
+        console.log('response from fs-dac directory call ', res)
+
+
+        if (data) {
+          actions.loadAudioFiles({ audioFileItems: data.audioFileItems });
+        } else {
+          const res = await fs.createDirectory(
+            "localhost",
+            "prelude"
+          );
+
+          console.log("response for fs-dac on creating dir", res);
+        }
+        actions.setLoading({ isLoading: false });
+      }
+    }
+   )
 //   persistHNSEntriesState: thunkOn(
 //     (actions, storeActions) => [
 //       storeActions.hns.addEntry,

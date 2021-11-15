@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 // AudioFile: make typesafe`
 import { action, thunkOn, actionOn } from "easy-peasy";
@@ -169,12 +168,13 @@ export const musicPlayerModel = {
     state.loading = isLoading;
   }),
   addAudioFile: action(
-    (state, { songName, songArtist, cover, srcLink, done }) => {
+    (state, { songName, songArtist, cover, srcLink, browserUrl, done }) => {
       state.audioFileItems.push({
         songName,
         songArtist,
         cover,
         srcLink,
+        browserUrl,
         done,
       });
     }
@@ -212,33 +212,6 @@ export const musicPlayerModel = {
     state.audioPlayerInstance = audioPlayerInstance;
   }),
 
-  addSongLink: action((state, { srcLink, browserUrl }) => {
-    const songIndex = state.audioFileItems.findIndex(
-      (audioFile) => audioFile.srcLink === srcLink
-    );
-    state.audioFileItems[songIndex].browserUrl = browserUrl;
-  }),
-
-//   onAddSong: thunk(
-//     (actions, storeActions, {getStoreState, getStoreActions}) => actions.addAudioFile,
-//     async (actions, target) => {
-//       const srcLink = target.payload.srcLink;
-//       const mySky = getStoreState().mySky.mySky;
-
-//       if (mySky) {
-//         actions.setLoading({ isLoading: true });
-//         const browserUrl = await mySky.getSkylinkUrl(srcLink);
-//         actions.addSongLink({ srcLink, browserUrl });
-//       } else {
-//         const { throwError } = getStoreActions().ui;
-//         throwError({
-//           action: "createEntry",
-//           message: "Not able to convert skylink to portal",
-//         });
-//       }
-//     }
-//   ),
-
   // Todo Thunks
   onLoginChange: thunkOn(
     (actions, storeActions) => storeActions.mySky.setUserID,
@@ -246,16 +219,20 @@ export const musicPlayerModel = {
       // logging in, call loadAudioFiles
       if (target.payload.userID) {
         actions.setLoading({ isLoading: true });
+
+        
         const mySky = target.payload.mySky;
         console.log("THIS IS MYSKY OBJ");
         console.log(mySky);
-        const { data } = await mySky.getJSON("localhost/prelude");
-        console.log("THIS IS THE DATA COMING BACK FROM MYSKY");
-        console.log(data);
+
+        const response = await mySky.getJSON("localhost/prelude.json");
+        const data = response.data
+        console.log("THIS IS THE DATA COMING BACK FROM MYSKY", data);
+        console.log("full obj from mysky", response)
         if (data) {
           actions.loadAudioFiles({ audioFileItems: data.audioFileItems });
         } else {
-          await mySky.setJSON("localhost/prelude", { audioFileItems: [] });
+          await mySky.setJSON("localhost/prelude.json", { audioFileItems: [] });
         }
         actions.setLoading({ isLoading: false });
       }

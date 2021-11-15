@@ -25,3 +25,8 @@ function TodoForm() {
 }
 
 export default TodoForm;
+
+function AddSongForm() {
+    const addSong = useStoreActions((actions) => actions.music.addAudioFile)
+    
+}
