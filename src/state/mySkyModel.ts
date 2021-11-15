@@ -52,7 +52,9 @@ export const mySkyModel = {
     (actions, storeActions) => [
         storeActions.music.addAudioFile,
         storeActions.music.updateAudioFile,
-        storeActions.deleteAudioFile
+        storeActions.music.deleteAudioFile,
+        storeActions.music.addAudioFileDetails,
+        storeActions.deleteAudioFile,
     ],
     async (actions, target, { getStoreState }) => {
         const audioFileItems  = getStoreState().music.audioFileItems
@@ -61,42 +63,42 @@ export const mySkyModel = {
         
         if (mySky) {
             console.log('persisting audio files to MySky')
-            const result =  await mySky.setJSON('localhost/prelude.json', { audioFileItems })
+            const result =  await mySky.setJSON('AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json', { audioFileItems })
             console.log('result of clienc call', result)
         } 
 
     }
   ),
 
-   onFileSystemSet: thunkOn(
-    (actions, storeActions) => actions.setFileSystem,
-    async (actions, { payload }, { getStoreActions, getStoreState }) => {
-      // logging in, call loadAudioFiles
+//    onFileSystemSet: thunkOn(
+//     (actions, storeActions) => actions.setFileSystem,
+//     async (actions, { payload }, { getStoreActions, getStoreState }) => {
+//       // logging in, call loadAudioFiles
 
-      const fs = payload.fileSystem.client 
+//       const fs = payload.fileSystem.client 
       
-      if (payload.userID) {
-        const setLoading = getStoreActions().music.setLoading;
-        setLoading({ isLoading: true });
+//       if (payload.userID) {
+//         const setLoading = getStoreActions().music.setLoading;
+//         setLoading({ isLoading: true });
         
-        const res = await fs.getDirectoryIndex("localhost/prelude.json")
-        console.log('response from fs-dac directory call ', res)
+//         const res = await fs.getDirectoryIndex("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json")
+//         console.log('response from fs-dac directory call ', res)
 
 
-        if (data) {
-          actions.loadAudioFiles({ audioFileItems: data.audioFileItems });
-        } else {
-          const res = await fs.createDirectory(
-            "localhost",
-            "prelude"
-          );
+//         if (data) {
+//           actions.loadAudioFiles({ audioFileItems: data.audioFileItems });
+//         } else {
+//           const res = await fs.createDirectory(
+//             "localhost",
+//             "prelude"
+//           );
 
-          console.log("response for fs-dac on creating dir", res);
-        }
-        actions.setLoading({ isLoading: false });
-      }
-    }
-   )
+//           console.log("response for fs-dac on creating dir", res);
+//         }
+//         actions.setLoading({ isLoading: false });
+//       }
+//     }
+//    )
 //   persistHNSEntriesState: thunkOn(
 //     (actions, storeActions) => [
 //       storeActions.hns.addEntry,

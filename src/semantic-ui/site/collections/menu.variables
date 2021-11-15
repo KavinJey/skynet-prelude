@@ -2,7 +2,6 @@
     User Variable Overrides
 *******************************/
 
-@background: #413d5c;
 @itemTextColor: rgba(255, 255, 255, 0.8);
 @activeItemBackground: @transparentBlack;
 @activeItemTextColor: @violet;

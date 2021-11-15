@@ -1,5 +1,13 @@
-import { Header, Container, Tab, Card, Dimmer, Loader, Segment } from "semantic-ui-react";
-import React, { Component } from "react";
+import {
+  Header,
+  Container,
+  Tab,
+  Card,
+  Dimmer,
+  Loader,
+  Segment,
+} from "semantic-ui-react";
+import React, { Component, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import "react-jinke-music-player/assets/index.css";
@@ -12,13 +20,10 @@ const tabTitleStyling = {
   padding: "1em",
 };
 
-
 const panes = [
   {
     menuItem: "My Library",
-    render: () => (
-      <LibraryPane />
-    ),
+    render: () => <LibraryPane />,
   },
 
   {
@@ -36,16 +41,16 @@ const panes = [
 ];
 
 const Library = () => {
-   
+    // @ts-ignore
+  const currentQueue = useStoreState((state) => state.music.currentQueue);
 
+  useEffect(() => {}, [currentQueue])
 
   return (
-      
     <Container style={{ marginTop: "15%" }}>
-      <Tab style={{border: '1 solid #000;'}} panes={panes} />
-      <PreludeMusicBar />
+      <Tab style={{ border: "1 solid #000;" }} panes={panes} />
+      <PreludeMusicBar currentQueue={currentQueue} />
     </Container>
-
   );
 };
 

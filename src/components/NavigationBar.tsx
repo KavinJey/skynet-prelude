@@ -18,7 +18,8 @@ const NavigationBar = () => {
 
   return (
     <Container>
-      <Menu fixed="top">
+      <Menu style={{background: '#413d5c'}} fixed="top">
+          
         <Container>
           <Menu.Item header>
             <Image src={Logo} width="150" style={{ marginRight: "2em" }} />

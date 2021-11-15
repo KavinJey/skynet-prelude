@@ -80,6 +80,7 @@ const UploadElement = ({ file, status, error, url = "", progress = 0 }) => {
               )}
 
               {status === "complete" && <a href={url}>{url}</a>}
+              
 
               {status === "error" && error && (
                 <span className="text-error">{error}</span>

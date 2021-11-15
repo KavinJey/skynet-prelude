@@ -22,14 +22,17 @@ import ReactJkMusicPlayer from "react-jinke-music-player";
 import "react-jinke-music-player/assets/index.css";
 import EditSongForm from "./EditSongForm";
 
-const SongList = () => {
+const PlaylistList = () => {
   const [openSongEditModal, setSongEditModal] = useState(false);
   const audioFiles = useStoreState((state) => state.music.audioFileItems);
   const { updateAudioFile, deleteAudioFile, playSong, addToQueue } =
     useStoreActions((actions) => actions.music);
-  const isPlaying  = useStoreState((state) => state.music.playing);
+  const currentQueue = useStoreState((state) => state.music.currentQueue);
+  const addAudioPlayerInstance = useStoreActions(
+    (state) => state.music.addAudioPlayerInstance
+  );
 
-    const [currentSongEdit, setCurrentSongEdit] = useState({});
+  const [currentSongEdit, setCurrentSongEdit] = useState({});
 
   //   const { client } = useContext
 
@@ -63,9 +66,9 @@ const SongList = () => {
                     </Placeholder>
                   )}
                   <h5 style={{ marginRight: "2em" }}>
-                    Name: {audioFile.songName}{" "}
+                    Name: {audioFile.name}{" "}
                   </h5>
-                  <h5>Artist: {audioFile.songArtist} </h5>
+                  <h5>Artist: {audioFile.singer} </h5>
                 </Container>
               </List.Header>
               <List.Description>
@@ -85,25 +88,25 @@ const SongList = () => {
                         })
                       }
                     >
-                      { isPlaying ?  <Icon name="pause circle" />: <Icon name="play circle" />}
+                      <Icon name="play circle" />
                     </Menu.Item>
 
                     <Menu.Item
                       name="Edit Song"
-                    onClick={() => {
-                          setCurrentSongEdit(audioFile);
-                          setSongEditModal(true);
-                        }}
+                      onClick={(event) => console.log(event)}
                     >
                       <Icon
                         name="edit"
-                     
+                        onClick={() => {
+                          setCurrentSongEdit(audioFile);
+                          setSongEditModal(true);
+                        }}
                       />
                     </Menu.Item>
 
                     <Menu.Item
                       name="Delete"
-                      onClick={(event) => deleteAudioFile({index: i})}
+                      onClick={(event) => console.log(event)}
                     >
                       <Icon name="delete" />
                     </Menu.Item>
@@ -134,13 +137,15 @@ const SongList = () => {
         onOpen={() => setSongEditModal(true)}
         open={openSongEditModal}
       >
-        <Modal.Header>Edit Song {"-" || currentSongEdit.songName} ({currentSongEdit.srcLink})</Modal.Header>
+        <Modal.Header>Edit Song {currentSongEdit.srcLink}</Modal.Header>
         <Modal.Content>
           <Image size="medium" src={currentSongEdit.cover} wrapped />
           <Modal.Description>
             <EditSongForm
               modalToggle={setSongEditModal}
-              audioFile={currentSongEdit}
+              songTitle={currentSongEdit.songTitle}
+              songArtist={currentSongEdit.songArtist}
+              cover={currentSongEdit.cover}
             />
           </Modal.Description>
         </Modal.Content>
@@ -150,4 +155,4 @@ const SongList = () => {
   );
 };
 
-export default SongList;
+export default PlaylistList;
