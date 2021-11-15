@@ -15,6 +15,7 @@ import PreludeMusicBar from "../components/PreludeMusicBar";
 import Uploader from "../components/Uploader";
 import LibraryPane from "../components/LibraryPane";
 import { useStoreState } from "easy-peasy";
+import PlaylistPane from "../components/PlaylistPane";
 
 const tabTitleStyling = {
   padding: "1em",
@@ -25,7 +26,10 @@ const panes = [
     menuItem: "My Library",
     render: () => <LibraryPane />,
   },
-
+  {
+      menuItem: 'My Playlist',
+      render: () => <PlaylistPane />
+  },
   {
     menuItem: "Upload",
     render: () => (

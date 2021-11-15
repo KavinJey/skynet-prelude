@@ -34,6 +34,7 @@ function EditSongForm({ modalToggle, audioFile }) {
           <Input
             onChange={(e) => setSongTitle(e.target.value)}
             placeholder="Darude Sandstorm"
+            value={localSongTitle}
           />
         </Form.Field>
         <Form.Field>
@@ -41,6 +42,7 @@ function EditSongForm({ modalToggle, audioFile }) {
           <Input
             onChange={(e) => setSongArtist(e.target.value)}
             placeholder="Queen"
+            value={localArtist}
           />
         </Form.Field>
 
@@ -49,6 +51,7 @@ function EditSongForm({ modalToggle, audioFile }) {
           <Input
             onChange={(e) => setCover(e.target.value)}
             placeholder="valid browser link"
+            value={localCover}
           />
         </Form.Field>
       </Form.Group>

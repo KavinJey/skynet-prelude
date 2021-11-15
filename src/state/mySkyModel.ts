@@ -54,16 +54,22 @@ export const mySkyModel = {
         storeActions.music.updateAudioFile,
         storeActions.music.deleteAudioFile,
         storeActions.music.addAudioFileDetails,
+        storeActions.music.addNewPlaylist,
+        storeActions.music.addNewSongToPlaylist,
         storeActions.deleteAudioFile,
+        
     ],
     async (actions, target, { getStoreState }) => {
         const audioFileItems  = getStoreState().music.audioFileItems
+        const playlists = getStoreState().music.playlists
         console.log('persisting the following', audioFileItems)
+
+        console.log('persisting the following',  playlists)
         const mySky = getStoreState().mySky.mySky;
         
         if (mySky) {
             console.log('persisting audio files to MySky')
-            const result =  await mySky.setJSON('AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json', { audioFileItems })
+            const result =  await mySky.setJSON('AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json', { audioFileItems, playlists })
             console.log('result of clienc call', result)
         } 
 

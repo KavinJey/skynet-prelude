@@ -25,7 +25,7 @@ const userProfile = new UserProfileDAC();
 const fileSystem = new FileSystemDAC();
 
 const dataDomain =
-  window.location.hostname === "localhost" ? "localhost" : "sia://AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA";
+  window.location.hostname === "localhost" ? "localhost" : "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA";
 
 const SkynetProvider = ({ children }) => {
   const [skynetState, setSkynetState] = useState({
