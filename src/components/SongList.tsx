@@ -27,9 +27,9 @@ const SongList = () => {
   const audioFiles = useStoreState((state) => state.music.audioFileItems);
   const { updateAudioFile, deleteAudioFile, playSong, addToQueue } =
     useStoreActions((actions) => actions.music);
-  const isPlaying  = useStoreState((state) => state.music.playing);
+  const isPlaying = useStoreState((state) => state.music.playing);
 
-    const [currentSongEdit, setCurrentSongEdit] = useState({});
+  const [currentSongEdit, setCurrentSongEdit] = useState({});
 
   //   const { client } = useContext
 
@@ -85,25 +85,26 @@ const SongList = () => {
                         })
                       }
                     >
-                      { isPlaying ?  <Icon name="pause circle" />: <Icon name="play circle" />}
+                      {isPlaying ? (
+                        <Icon name="pause circle" />
+                      ) : (
+                        <Icon name="play circle" />
+                      )}
                     </Menu.Item>
 
                     <Menu.Item
                       name="Edit Song"
-                    onClick={() => {
-                          setCurrentSongEdit(audioFile);
-                          setSongEditModal(true);
-                        }}
+                      onClick={() => {
+                        setCurrentSongEdit(audioFile);
+                        setSongEditModal(true);
+                      }}
                     >
-                      <Icon
-                        name="edit"
-                     
-                      />
+                      <Icon name="edit" />
                     </Menu.Item>
 
                     <Menu.Item
                       name="Delete"
-                      onClick={(event) => deleteAudioFile({index: i})}
+                      onClick={(event) => deleteAudioFile({ index: i })}
                     >
                       <Icon name="delete" />
                     </Menu.Item>
@@ -134,7 +135,10 @@ const SongList = () => {
         onOpen={() => setSongEditModal(true)}
         open={openSongEditModal}
       >
-        <Modal.Header>Edit Song {"-" || currentSongEdit.songName} ({currentSongEdit.srcLink})</Modal.Header>
+        <Modal.Header>
+          Edit Song {"-" || currentSongEdit.songName} ({currentSongEdit.srcLink}
+          )
+        </Modal.Header>
         <Modal.Content>
           <Image size="medium" src={currentSongEdit.cover} wrapped />
           <Modal.Description>

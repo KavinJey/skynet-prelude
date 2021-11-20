@@ -20,7 +20,6 @@ const MySkyButton = () => {
       mySky.checkLogin().then((result) => {
         if (result) {
           fetchUserID({ mySky });
-          
         }
         setLoading(false);
       });

@@ -1,6 +1,4 @@
-// @ts-nocheck
-// AudioFile: make typesafe`
-import { action, thunkOn, actionOn } from "easy-peasy";
+import { action, thunkOn, actionOn, Action } from "easy-peasy";
 import { _Pick } from "underscore";
 
 const songModel = {
@@ -11,14 +9,25 @@ const songModel = {
     "http://res.cloudinary.com/alick/video/upload/v1502375674/Bedtime_Stories.mp3",
 };
 export type SongModel = typeof songModel;
-export interface IMusicPlayerModel {
-  loading: boolean;
-  personalLibrary: Array<any>;
-  audioFileItems: Array<any>;
-  currentQueue: Array<any>;
+interface Playlists {
+  [title: string]: Array<SongModel>;
 }
 
-export const musicPlayerModel = {
+export interface MusicPlayerModelType {
+  loading: boolean;
+  audioPlayerInstance: any;
+  playing: boolean;
+
+  personalLibrary: Array<any>;
+  playlists: Playlists;
+  audioFileItems: Array<SongModel>;
+  currentQueue: Array<SongModel>;
+
+  setLoading: Action<MusicPlayerModelType, { isLoading: boolean }>;
+  addAudioFile: Action<MusicPlayerModelType, SongModel>;
+}
+
+export const musicPlayerModel: MusicPlayerModelType = {
   // AudioFile State
   loading: false,
   audioPlayerInstance: undefined,
@@ -105,7 +114,7 @@ export const musicPlayerModel = {
     console.log("this is new queue", state.currentQueue);
   }),
 
-  addNewPlaylist: action((state, { playlistTitle, songs}) => {
+  addNewPlaylist: action((state, { playlistTitle, songs }) => {
     state.playlists[playlistTitle] = {
       songs: songs ? songs : [],
     };
@@ -190,7 +199,7 @@ export const musicPlayerModel = {
         console.log("full obj from mysky", response);
         if (data?.audioFileItems && data?.playlists) {
           actions.loadAudioFiles({ audioFileItems: data.audioFileItems });
-          actions.loadPlaylists({ playlists: data.playlists })
+          actions.loadPlaylists({ playlists: data.playlists });
         } else {
           await mySky.setJSON(
             "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",

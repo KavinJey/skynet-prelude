@@ -26,40 +26,55 @@ function TodoForm() {
 
 export default TodoForm;
 
-function EditSongForm({songTitle, songArtist, cover, srcLink, browserUrl}) {
+function EditSongForm({ songTitle, songArtist, cover, srcLink, browserUrl }) {
   const addSongDetails = useStoreActions(
     (actions) => actions.music.addAudioFileDetails
   );
 
-  const [localSongTitle, setSongTitle] = useState(songTitle)
+  const [localSongTitle, setSongTitle] = useState(songTitle);
 
-  const [localCover, setCover] = useState(cover)
-  const [localArtist, setSongArtist] = useState(songArtist)
+  const [localCover, setCover] = useState(cover);
+  const [localArtist, setSongArtist] = useState(songArtist);
 
   return (
     <Form>
       <Form.Group inline>
         <Form.Field>
           <label> Song Title</label>
-          <Input  onChange={(e) => setSongTitle(e.target.value)} placeholder="Darude Sandstorm" />
+          <Input
+            onChange={(e) => setSongTitle(e.target.value)}
+            placeholder="Darude Sandstorm"
+          />
         </Form.Field>
         <Form.Field>
           <label> Artist </label>
-          <Input  onChange={(e) => setSongArtist(e.target.value)} placeholder="Queen" />
+          <Input
+            onChange={(e) => setSongArtist(e.target.value)}
+            placeholder="Queen"
+          />
         </Form.Field>
 
         <Form.Field>
           <label> Cover </label>
-          <Input  onChange={(e) => setCover(e.target.value)} placeholder="valid browser link" />
+          <Input
+            onChange={(e) => setCover(e.target.value)}
+            placeholder="valid browser link"
+          />
         </Form.Field>
-      </Form.Group> 
-      <Button onClick={() => addSongDetails({
-          songName: localSongTitle,
-          songArtist: localArtist,
-          cover: localCover,
-          srcLink: srcLink,
-          browserUrl: browserUrl
-      })}>Submit</Button>
+      </Form.Group>
+      <Button
+        onClick={() =>
+          addSongDetails({
+            songName: localSongTitle,
+            songArtist: localArtist,
+            cover: localCover,
+            srcLink: srcLink,
+            browserUrl: browserUrl,
+          })
+        }
+      >
+        Submit
+      </Button>
     </Form>
   );
 }

@@ -1,5 +1,3 @@
-//  @ts-nocheck
-// TODO: make typesafe
 import { action, thunk, thunkOn } from "easy-peasy";
 import { parseSkylink } from "skynet-js";
 
@@ -60,23 +58,23 @@ export const hnsModel = {
       });
     }
   ),
-//   onLoginChange: thunkOn(
-//     (actions, storeActions) => storeActions.mySky.setUserID,
-//     async (actions, target) => {
-//       actions.clearEntries();
+  //   onLoginChange: thunkOn(
+  //     (actions, storeActions) => storeActions.mySky.setUserID,
+  //     async (actions, target) => {
+  //       actions.clearEntries();
 
-//       // logging in, call loadTodos
-//       if (target.payload.userID) {
-//         actions.setLoading({ isLoading: true });
-//         const mySky = target.payload.mySky;
-//         const { data } = await mySky.getJSON("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/hnsEntries.json");
-//         if (data) {
-//           actions.loadEntries({ hnsEntries: data.hnsEntries });
-//         } else {
-//           await mySky.setJSON("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/hnsEntries.json", { hnsEntries: [] });
-//         }
-//         actions.setLoading({ isLoading: false });
-//       }
-//     }
-//   ),
+  //       // logging in, call loadTodos
+  //       if (target.payload.userID) {
+  //         actions.setLoading({ isLoading: true });
+  //         const mySky = target.payload.mySky;
+  //         const { data } = await mySky.getJSON("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/hnsEntries.json");
+  //         if (data) {
+  //           actions.loadEntries({ hnsEntries: data.hnsEntries });
+  //         } else {
+  //           await mySky.setJSON("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/hnsEntries.json", { hnsEntries: [] });
+  //         }
+  //         actions.setLoading({ isLoading: false });
+  //       }
+  //     }
+  //   ),
 };

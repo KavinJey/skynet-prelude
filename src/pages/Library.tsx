@@ -27,8 +27,8 @@ const panes = [
     render: () => <LibraryPane />,
   },
   {
-      menuItem: 'My Playlist',
-      render: () => <PlaylistPane />
+    menuItem: "My Playlist",
+    render: () => <PlaylistPane />,
   },
   {
     menuItem: "Upload",
@@ -45,10 +45,10 @@ const panes = [
 ];
 
 const Library = () => {
-    // @ts-ignore
+  // @ts-ignore
   const currentQueue = useStoreState((state) => state.music.currentQueue);
 
-  useEffect(() => {}, [currentQueue])
+  useEffect(() => {}, [currentQueue]);
 
   return (
     <Container style={{ marginTop: "15%" }}>

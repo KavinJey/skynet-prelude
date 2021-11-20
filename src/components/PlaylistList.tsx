@@ -32,7 +32,10 @@ const PlaylistList = () => {
     (actions) => actions.music.addNewPlaylist
   );
 
-  const [playlistForm, setPlaylistForm] = useState({songs: [], playlistTitle: ''});
+  const [playlistForm, setPlaylistForm] = useState({
+    songs: [],
+    playlistTitle: "",
+  });
 
   //   const { client } = useContext
 
@@ -44,8 +47,7 @@ const PlaylistList = () => {
   //     }
   //   }, [mySky]);
 
-    useEffect(() => {
-    }, [openNewPlaylistModal, playlistForm])
+  useEffect(() => {}, [openNewPlaylistModal, playlistForm]);
 
   const transformToOptions = (songs) => {
     if (songs) {
@@ -53,8 +55,8 @@ const PlaylistList = () => {
         key: i,
         text: audioFile?.songName,
         value: {
-            ...audioFile,
-        }
+          ...audioFile,
+        },
       }));
 
       return transformedSongs;
@@ -88,7 +90,10 @@ const PlaylistList = () => {
               <label>Playlist Name</label>
               <input
                 onChange={(e) =>
-                  setPlaylistForm({ ...playlistForm,playlistTitle: e.target.value })
+                  setPlaylistForm({
+                    ...playlistForm,
+                    playlistTitle: e.target.value,
+                  })
                 }
                 name="playlistTitle"
                 placeholder="Playlist Name"
@@ -99,12 +104,12 @@ const PlaylistList = () => {
               fluid
               multiple
               selection
-              onChange={(event, data) =>{
-                  setPlaylistForm({
+              onChange={(event, data) => {
+                setPlaylistForm({
                   ...playlistForm,
-                  songs: data.value 
-              })
-              } }
+                  songs: data.value,
+                });
+              }}
               options={transformToOptions(songs)}
             />
             <Button

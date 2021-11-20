@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createContext, useState, useEffect } from "react";
 import { SkynetClient } from "skynet-js";
 import { FileSystemDAC } from "fs-dac-library";
@@ -25,7 +24,9 @@ const userProfile = new UserProfileDAC();
 const fileSystem = new FileSystemDAC();
 
 const dataDomain =
-  window.location.hostname === "localhost" ? "localhost" : "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA";
+  window.location.hostname === "localhost"
+    ? "localhost"
+    : "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA";
 
 const SkynetProvider = ({ children }) => {
   const [skynetState, setSkynetState] = useState({
@@ -54,9 +55,6 @@ const SkynetProvider = ({ children }) => {
         await mySky.loadDacs(userProfile);
 
         // await mySky.loadDacs(fileSystem);
-
-
-
 
         // replace mySky in state object
         setSkynetState({ ...skynetState, mySky });

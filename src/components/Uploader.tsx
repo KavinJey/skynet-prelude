@@ -80,7 +80,6 @@ const UploadElement = ({ file, status, error, url = "", progress = 0 }) => {
               )}
 
               {status === "complete" && <a href={url}>{url}</a>}
-              
 
               {status === "error" && error && (
                 <span className="text-error">{error}</span>
@@ -120,7 +119,7 @@ const Uploader = ({ uploadMode }) => {
 
   // TODO type safe this
   // @ts-ignore
-  const addSong = useStoreActions((actions) => actions.music.addAudioFile)
+  const addSong = useStoreActions((actions) => actions.music.addAudioFile);
 
   const handleDrop = async (acceptedFiles) => {
     if (mode === "directory" && acceptedFiles.length) {
@@ -196,13 +195,13 @@ const Uploader = ({ uploadMode }) => {
             );
           } else {
             response = await client.uploadFile(file, { onUploadProgress });
-            const browserUrl = await client.getSkylinkUrl(response.skylink)
-            addSong({ srcLink: response.skylink, browserUrl })
+            const browserUrl = await client.getSkylinkUrl(response.skylink);
+            addSong({ srcLink: response.skylink, browserUrl });
           }
 
           const url = await client.getSkylinkUrl(response.skylink, {
             subdomain: mode === "directory",
-          })
+          });
 
           onFileStateChange(file, { status: "complete", url });
         } catch (error) {

@@ -2,10 +2,15 @@ import { createStore, Store } from "easy-peasy";
 import { todoModel } from "./todoModel";
 import { hnsModel } from "./hnsModel";
 import { mySkyModel } from "./mySkyModel";
-import { uiModel } from "./uiModel";
+import { uiModel, uiModelType } from "./uiModel";
 import { musicPlayerModel } from "./musicPlayerModel";
 
-export const store  = createStore(
+export interface StoreModel {
+  ui: uiModelType;
+  [any: string]: any;
+}
+
+export const store = createStore<StoreModel>(
   {
     mySky: mySkyModel,
     todos: todoModel,
