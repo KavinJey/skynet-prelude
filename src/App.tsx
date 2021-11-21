@@ -1,13 +1,7 @@
 import { Container } from "semantic-ui-react";
 import NavigationBar from "./components/NavigationBar";
 import MessageDisplay from "./components/MessageDisplay";
-import {
-  Home,
-  Playlists,
-  Library,
-  RecentlyPlayed,
-  Profile,
-} from "./pages";
+import { Home, Playlists, Library, RecentlyPlayed, Profile } from "./pages";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { SkynetProvider } from "./state/SkynetContext";
 import { StoreProvider } from "easy-peasy";
