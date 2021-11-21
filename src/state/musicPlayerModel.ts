@@ -1,16 +1,23 @@
-import { action, thunkOn, actionOn, Action } from "easy-peasy";
+import { action, thunkOn, actionOn, Action, Thunk, ThunkOn } from "easy-peasy";
 import { _Pick } from "underscore";
 
-const songModel = {
-  name: "Intro",
-  singer: "The Notorious B.I.G",
-  cover: "https://siasky.net/OADDYlbpBCusBIF8TdxUV99r48ZM6qRy_MTwfQ1DJA85mQ",
-  musicSrc:
-    "http://res.cloudinary.com/alick/video/upload/v1502375674/Bedtime_Stories.mp3",
-};
-export type SongModel = typeof songModel;
+export type SongModel = {
+    name?: string;
+    musicSrc?: string;
+    singer?: string;
+    cover?: string;
+    browserUrl?: string;
+    srcLink?: string;
+    songName?: string;
+    songArtist?: string;
+    done?: boolean;
+
+}
+
 interface Playlists {
-  [title: string]: Array<SongModel>;
+  [title: string]: {
+      songs: Array<SongModel>
+  };
 }
 
 export interface MusicPlayerModelType {
@@ -25,6 +32,16 @@ export interface MusicPlayerModelType {
 
   setLoading: Action<MusicPlayerModelType, { isLoading: boolean }>;
   addAudioFile: Action<MusicPlayerModelType, SongModel>;
+  deleteAudioFile: Action<MusicPlayerModelType, Array<SongModel>>;
+  updateAudioFile: Action<MusicPlayerModelType>;
+  clearAudioFiles: Action<MusicPlayerModelType>;
+  loadAudioFiles: Action<MusicPlayerModelType, MusicPlayerModelType>;
+  loadPlaylists: Action<MusicPlayerModelType, MusicPlayerModelType>; 
+  addNewPlaylist: Action<MusicPlayerModelType, { playlistTitle: string, songs: Array<SongModel>}>;
+  addNewSongToPlaylist: Action<MusicPlayerModelType, {song: SongModel, playlistTitle: string}>;
+  addAudioPlayerInstance: Action<MusicPlayerModelType>;
+  refreshLibrary: ThunkOn<MusicPlayerModelType>;
+  onLoginChange: ThunkOn<MusicPlayerModelType>;
 }
 
 export const musicPlayerModel: MusicPlayerModelType = {
@@ -55,19 +72,19 @@ export const musicPlayerModel: MusicPlayerModelType = {
     }
   ),
 
-  addAudioFileDetails: action((state, payload) => {
-    console.log("this is the state", state);
-    console.log("this is the payload", payload);
-    const songIndex = state.audioFileItems.findIndex(
-      (audioFile) => audioFile?.srcLink === payload.srcLink
-    );
+//   addAudioFileDetails: action((state, payload) => {
+//     console.log("this is the state", state);
+//     console.log("this is the payload", payload);
+//     const songIndex = state.audioFileItems.findIndex(
+//       (audioFile) => audioFile?.srcLink === payload.srcLink
+//     );
 
-    console.log("this is the song index", songIndex);
-    const currentSongToEdit = state.audioFileItems[songIndex];
-    currentSongToEdit.songName = payload.songName;
-    currentSongToEdit.songArtist = payload.songArtist;
-    currentSongToEdit.cover = payload.cover;
-  }),
+//     console.log("this is the song index", songIndex);
+//     const currentSongToEdit = state.audioFileItems[songIndex];
+//     currentSongToEdit.songName = payload.songName;
+//     currentSongToEdit.songArtist = payload.songArtist;
+//     currentSongToEdit.cover = payload.cover;
+//   }),
   deleteAudioFile: action((state, payload) => {
     state.audioFileItems.splice(payload.index, 1);
   }),
@@ -86,33 +103,33 @@ export const musicPlayerModel: MusicPlayerModelType = {
     console.log("This is audio files coming after login");
     state.playlists = playlists;
   }),
-  playSong: action((state, song) => {
-    console.log("this is state when playing", state);
+//   playSong: action((state, song) => {
+//     console.log("this is state when playing", state);
 
-    console.log("this is state when playing", song);
-    state.currentQueue[0] = song;
+//     console.log("this is state when playing", song);
+//     state.currentQueue[0] = song;
 
-    console.log("this is the instance", state.audioPlayerInstance);
+//     console.log("this is the instance", state.audioPlayerInstance);
 
-    // if (state.audioPlayerInstance) {
-    //   state.audioPlayerInstance.togglePlay();
-    //   state.playing = true;
-    // }
-  }),
+//     // if (state.audioPlayerInstance) {
+//     //   state.audioPlayerInstance.togglePlay();
+//     //   state.playing = true;
+//     // }
+//   }),
 
-  setPlaying: action((state, { playing }) => {
-    state.playing = playing;
-  }),
+//   setPlaying: action((state, { playing }) => {
+//     state.playing = playing;
+//   }),
 
-  clearQueue: action((state) => {
-    state.currentQueue = [];
-  }),
-  addToQueue: action((state, song) => {
-    const currentQueue = state.currentQueue;
-    currentQueue.push(song);
-    console.log("incoming song", song);
-    console.log("this is new queue", state.currentQueue);
-  }),
+//   clearQueue: action((state) => {
+//     state.currentQueue = [];
+//   }),
+//   addToQueue: action((state, song) => {
+//     const currentQueue = state.currentQueue;
+//     currentQueue.push(song);
+//     console.log("incoming song", song);
+//     console.log("this is new queue", state.currentQueue);
+//   }),
 
   addNewPlaylist: action((state, { playlistTitle, songs }) => {
     state.playlists[playlistTitle] = {
@@ -132,29 +149,29 @@ export const musicPlayerModel: MusicPlayerModelType = {
 
   // Todo Thunks
 
-  togglePlay: thunkOn(
-    (actions, storeActions) => actions.playSong,
-    (actions, target, { getStoreState }) => {
-      const isPlaying = getStoreState().music.playing;
-      const musicPlayer = getStoreState().music.audioPlayerInstance;
-      if (musicPlayer) {
-        actions.setPlaying(!isPlaying);
-      }
-    }
-  ),
-  reloadMusicPlayer: thunkOn(
-    (actions, storeActions) => [
-      actions.addToQueue,
-      actions.clearQueue,
-      actions.playSong,
-    ],
-    (action, target, { getStoreState }) => {
-      const musicPlayer = getStoreState().music.audioPlayerInstance;
-      if (musicPlayer) {
-        musicPlayer.load();
-      }
-    }
-  ),
+//   togglePlay: thunkOn(
+//     (actions, storeActions) => actions.playSong,
+//     (actions, target, { getStoreState }) => {
+//       const isPlaying = getStoreState().music.playing;
+//       const musicPlayer = getStoreState().music.audioPlayerInstance;
+//       if (musicPlayer) {
+//         actions.setPlaying(!isPlaying);
+//       }
+//     }
+//   ),
+//   reloadMusicPlayer: thunkOn(
+//     (actions, storeActions) => [
+//       actions.addToQueue,
+//       actions.clearQueue,
+//       actions.playSong,
+//     ],
+//     (action, target, { getStoreState }) => {
+//       const musicPlayer = getStoreState().music.audioPlayerInstance;
+//       if (musicPlayer) {
+//         musicPlayer.load();
+//       }
+//     }
+//   ),
   refreshLibrary: thunkOn(
     (actions, storeActions) => actions.addAudioFileDetails,
     async (actions, target, { getStoreState, getStoreActions }) => {

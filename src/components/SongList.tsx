@@ -17,7 +17,7 @@ import {
   Header,
 } from "semantic-ui-react";
 import { useState } from "react";
-import { useStoreState, useStoreActions } from "easy-peasy";
+import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import "react-jinke-music-player/assets/index.css";
 import EditSongForm from "./EditSongForm";
