@@ -1,10 +1,34 @@
-//  @ts-nocheck
 // TODO: make typesafe
 
-import { action, thunk, thunkOn, computed } from "easy-peasy";
+import {
+  action,
+  thunk,
+  thunkOn,
+  computed,
+  Action,
+  Thunk,
+  createTypedHooks,
+} from "easy-peasy";
 import _ from "underscore";
 
-export const uiModel = {
+interface uiMessageModel {
+  message: string;
+  negative?: boolean;
+  dismissed?: boolean;
+  id?: string;
+}
+
+export interface UiModelType {
+  error: string | null;
+  messages: Array<uiMessageModel>;
+  setError: Action<UiModelType, uiMessageModel>;
+  resetError: Action<UiModelType, UiModelType>;
+  addMessage: Action<UiModelType, uiMessageModel>;
+  dismissMessage: Action<UiModelType, uiMessageModel>;
+  throwError: Thunk<UiModelType, uiMessageModel>;
+}
+
+export const uiModel: UiModelType = {
   error: null,
   messages: [
     {
