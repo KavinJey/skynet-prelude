@@ -1,6 +1,39 @@
-import { action, thunk, thunkOn, computed } from "easy-peasy";
+import {
+  action,
+  thunk,
+  thunkOn,
+  computed,
+  Computed,
+  Action,
+  Thunk,
+  ThunkOn,
+} from "easy-peasy";
+import { MySky } from "skynet-js";
+import { FileSystemDAC } from "fs-dac-library";
+import { MusicPlayerModelType } from "./musicPlayerModel";
+import { StoreModel } from "./store";
+export interface MySkyModelType {
+  userID?: string;
+  mySky?: MySky;
+  fileSystem?: FileSystemDAC;
+  loggedIn: Computed<MySkyModelType, boolean>;
+  setMySky: Action<MySkyModelType, { mySky: MySky }>;
 
-export const mySkyModel = {
+  setFileSystem: Action<MySkyModelType, MySkyModelType>;
+
+  setUserID: Thunk<MySkyModelType, { userID: string; mySky?: MySky }>;
+
+  setValidUserID: Action<MySkyModelType, { userID: string }>;
+
+  setNullUserID: Action<MySkyModelType>;
+
+  fetchUserID: Thunk<MySkyModelType, MySkyModelType>;
+
+  logout: Thunk<MySkyModelType, MySkyModelType>;
+  persistPreludeState: ThunkOn<MySkyModelType, any, StoreModel>;
+}
+
+export const mySkyModel: MySkyModelType = {
   // MySky State
   userID: null, //only set through setUserID!
   mySky: null,
@@ -51,10 +84,8 @@ export const mySkyModel = {
       storeActions.music.addAudioFile,
       storeActions.music.updateAudioFile,
       storeActions.music.deleteAudioFile,
-      storeActions.music.addAudioFileDetails,
       storeActions.music.addNewPlaylist,
       storeActions.music.addNewSongToPlaylist,
-      storeActions.deleteAudioFile,
     ],
     async (actions, target, { getStoreState }) => {
       const audioFileItems = getStoreState().music.audioFileItems;

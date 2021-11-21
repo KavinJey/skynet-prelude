@@ -1,4 +1,4 @@
-import { Container, Header, Rail } from "semantic-ui-react";
+import { Container } from "semantic-ui-react";
 import NavigationBar from "./components/NavigationBar";
 import MessageDisplay from "./components/MessageDisplay";
 import {
@@ -6,14 +6,12 @@ import {
   Playlists,
   Library,
   RecentlyPlayed,
-  Search,
   Profile,
 } from "./pages";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { SkynetProvider } from "./state/SkynetContext";
 import { StoreProvider } from "easy-peasy";
 import { store } from "./state/store";
-import Todo from "./pages/Todo";
 
 const App = () => {
   return (

@@ -1,12 +1,12 @@
 import { createStore, Store } from "easy-peasy";
-import { mySkyModel } from "./mySkyModel";
+import { mySkyModel, MySkyModelType } from "./mySkyModel";
 import { uiModel, UiModelType } from "./uiModel";
-import { musicPlayerModel } from "./musicPlayerModel";
-
+import { musicPlayerModel, MusicPlayerModelType } from "./musicPlayerModel";
 
 export interface StoreModel {
-    ui: UiModelType;
-    [any: string]: any;
+  ui: UiModelType;
+  mySky: MySkyModelType;
+  music: MusicPlayerModelType;
 }
 
 export const store = createStore<StoreModel>(
