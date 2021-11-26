@@ -4,13 +4,22 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { useState, useEffect } from "react";
 
 const PreludeMusicBar = ({ currentQueue }: { currentQueue: Array<any> }) => {
-  // @ts-ignore
+  const { loggedIn } = useStoreState((state) => state.mySky);
+  const { mySky, player } = useContext(SkynetContext);
+  const { fetchMusicDirectory } = useStoreActions((state) => state.mySky);
 
-  const addAudioPlayerInstance = useStoreActions(
-    (state) => state.music.addAudioPlayerInstance
-  );
-
-  const setPlaying = useStoreActions((state) => state.music.setPlaying);
+  useEffect(() => {
+    // if we have MySky loaded
+    setLoading(true);
+    if (mySky) {
+      mySky.checkLogin().then((result) => {
+        if (result) {
+          fetchMusicDirectory({ mySky, player });
+        }
+        setLoading(false);
+      });
+    }
+  }, [mySky]);
 
   useEffect(() => {}, [currentQueue]);
 

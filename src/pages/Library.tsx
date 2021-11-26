@@ -1,15 +1,5 @@
-import {
-  Header,
-  Container,
-  Tab,
-  Card,
-  Dimmer,
-  Loader,
-  Segment,
-} from "semantic-ui-react";
-import React, { Component, useEffect } from "react";
-import ReactDOM from "react-dom";
-import ReactJkMusicPlayer from "react-jinke-music-player";
+import { Header, Container, Tab } from "semantic-ui-react";
+import { useEffect } from "react";
 import "react-jinke-music-player/assets/index.css";
 import PreludeMusicBar from "../components/PreludeMusicBar";
 import Uploader from "../components/Uploader";
@@ -52,7 +42,7 @@ const Library = () => {
 
   return (
     <Container style={{ marginTop: "15%" }}>
-      <Tab style={{ border: "1 solid #000;" }} panes={panes} />
+      <Tab style={{ border: "1 solid #000" }} panes={panes} />
       <PreludeMusicBar currentQueue={currentQueue} />
     </Container>
   );

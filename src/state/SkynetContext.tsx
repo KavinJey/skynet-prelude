@@ -60,7 +60,7 @@ const SkynetProvider = ({ children }) => {
         await mySky.loadDacs(fileSystem as any as DacLibrary);
 
         // replace mySky in state object
-        setSkynetState({ ...skynetState, mySky, player });
+        setSkynetState({ ...skynetState, mySky, player, fileSystem });
       } catch (e) {
         console.error(e);
       }

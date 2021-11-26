@@ -1,5 +1,6 @@
 import { action, thunkOn, actionOn, Action, Thunk, ThunkOn } from "easy-peasy";
 import { FileData, FileSystemDAC } from "fs-dac-library";
+import { ISong } from "kokoro";
 import { _Pick } from "underscore";
 import { MySkyModelType } from "./mySkyModel";
 import {
@@ -25,9 +26,11 @@ export type SongModel = {
 
 export interface Playlists {
   [title: string]: {
-    songs: Array<SongModel>;
+    songs: Array<ISong>;
   };
 }
+
+type ISongModel = ISong & { skylink: string; done?: boolean };
 
 export interface MusicPlayerModelType {
   loading: boolean;
@@ -36,27 +39,28 @@ export interface MusicPlayerModelType {
 
   personalLibrary: Array<any>;
   playlists: Playlists;
-  audioLibrary: Array<SongModel>;
-  currentQueue: Array<SongModel>;
+  audioLibrary: {
+    [title: string]: ISongModel;
+  };
+  currentQueue: Array<ISong>;
 
   setLoading: Action<MusicPlayerModelType, { isLoading: boolean }>;
-  addAudioFile: Action<MusicPlayerModelType, SongModel>;
-  deleteAudioFile: Action<MusicPlayerModelType, { index: number }>;
+  addAudioFileInDirectory: Action<MusicPlayerModelType, ISongModel>;
+  deleteAudioFile: Action<MusicPlayerModelType, { title: string }>;
   updateAudioFile: Action<MusicPlayerModelType, { i: number; elem: any }>;
   clearAudioFiles: Action<MusicPlayerModelType>;
   loadData: Action<
     MusicPlayerModelType,
-    { playlists: Playlists; audioLibrary: Array<SongModel> }
+    Pick<MusicPlayerModelType, "playlists" | "audioLibrary">
   >;
   addNewPlaylist: Action<
     MusicPlayerModelType,
-    { playlistTitle: string; songs: Array<SongModel> }
+    { playlistTitle: string; songs: Array<string> }
   >;
   addNewSongToPlaylist: Action<
     MusicPlayerModelType,
-    { song: SongModel; playlistTitle: string }
+    { song: ISongModel; playlistTitle: string }
   >;
-  addAudioPlayerInstance: Action<MusicPlayerModelType, any>;
   onLoginChange: ThunkOn<MusicPlayerModelType, {}, StoreModel>;
 }
 
@@ -64,10 +68,7 @@ export const getFileDataFromMusicData = async (
   {
     audioLibrary,
     playlists,
-  }: {
-    audioLibrary?: Array<any>;
-    playlists?: Playlists;
-  },
+  }: Partial<Pick<MusicPlayerModelType, "audioLibrary" | "playlists">>,
   fileSystem: FileSystemDAC
 ): Promise<FileData> => {
   const musicRecordJSON = JSON.stringify({
@@ -91,7 +92,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   playing: false,
   personalLibrary: [],
   playlists: {},
-  audioLibrary: [],
+  audioLibrary: {},
   currentQueue: [],
 
   // AudioFile Setters and CRUD operations
@@ -99,40 +100,25 @@ export const musicPlayerModel: MusicPlayerModelType = {
     state.loading = isLoading;
   }),
 
-  addAudioFile: action(
-    (state, { songName, songArtist, cover, srcLink, browserUrl, done }) => {
-      state.audioLibrary.push({
-        songName,
-        songArtist,
+  addAudioFileInDirectory: action(
+    (state, { title, artist, cover, src, skylink, album }) => {
+      state.audioLibrary[title] = {
+        artist,
         cover,
-        srcLink,
-        browserUrl,
-        done,
-      });
+        src,
+        skylink,
+        album,
+      };
     }
   ),
-
-  //   addAudioFileDetails: action((state, payload) => {
-  //     console.log("this is the state", state);
-  //     console.log("this is the payload", payload);
-  //     const songIndex = state.audioFileItems.findIndex(
-  //       (audioFile) => audioFile?.srcLink === payload.srcLink
-  //     );
-
-  //     console.log("this is the song index", songIndex);
-  //     const currentSongToEdit = state.audioFileItems[songIndex];
-  //     currentSongToEdit.songName = payload.songName;
-  //     currentSongToEdit.songArtist = payload.songArtist;
-  //     currentSongToEdit.cover = payload.cover;
-  //   }),
-  deleteAudioFile: action((state, payload) => {
-    state.audioLibrary.splice(payload.index, 1);
+  deleteAudioFile: action((state, { title }) => {
+    delete state.audioLibrary[title];
   }),
   updateAudioFile: action((state, payload) => {
     state.audioLibrary[payload.i].done = payload.elem.checked;
   }),
   clearAudioFiles: action((state, payload) => {
-    state.audioLibrary = [];
+    state.audioLibrary = {};
   }),
   loadData: action((state, { audioLibrary, playlists }) => {
     state.audioLibrary = audioLibrary;
@@ -140,19 +126,15 @@ export const musicPlayerModel: MusicPlayerModelType = {
   }),
 
   addNewPlaylist: action((state, { playlistTitle, songs }) => {
+    const songsList = songs.map((key) => state.audioLibrary[key]);
+
     state.playlists[playlistTitle] = {
-      songs: songs ? songs : [],
+      songs: songs ? songsList : [],
     };
   }),
 
   addNewSongToPlaylist: action((state, { song, playlistTitle }) => {
     state.playlists[playlistTitle].songs.push(song);
-  }),
-
-  addAudioPlayerInstance: action((state, { audioPlayerInstance }) => {
-    console.log("this is the instance");
-    console.log(audioPlayerInstance);
-    state.audioPlayerInstance = audioPlayerInstance;
   }),
 
   // Todo Thunks

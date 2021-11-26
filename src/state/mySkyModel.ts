@@ -108,7 +108,7 @@ export const mySkyModel: MySkyModelType = {
   }),
   persistPreludeState: thunkOn(
     (actions, storeActions) => [
-      storeActions.music.addAudioFile,
+      storeActions.music.addAudioFileInDirectory,
       storeActions.music.updateAudioFile,
       storeActions.music.deleteAudioFile,
       storeActions.music.addNewPlaylist,
@@ -117,15 +117,10 @@ export const mySkyModel: MySkyModelType = {
     async (actions, target, { getStoreState }) => {
       const audioLibrary = getStoreState().music.audioLibrary;
       const playlists = getStoreState().music.playlists;
-      const userID = getStoreState().mySky.userID;
 
-      console.log("persisting the following", audioLibrary);
-
-      console.log("persisting the following", playlists);
-      const mySky = getStoreState().mySky.mySky;
       const fileSystem = getStoreState().mySky.fileSystem;
 
-      if (mySky) {
+      if (fileSystem) {
         console.log("persisting audio files to MySky");
 
         const musicRecordFileName = MUSIC_RECORD_FILENAME;
@@ -143,10 +138,6 @@ export const mySkyModel: MySkyModelType = {
           fileData
         );
 
-        // const result = await mySky.setJSON(
-        //   "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
-        //   { audioFileItems, playlists }
-        // );
         console.log("result of clienc call", fileUploadResult);
       }
     }

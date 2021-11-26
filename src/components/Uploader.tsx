@@ -115,7 +115,12 @@ const Uploader = ({ uploadMode }) => {
   const { client } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
   const [files, setFiles] = useState([]);
-  const acceptedFormats = ["audio/mpeg", "audio/ogg", "audio/flac"];
+  const acceptedFormats = [
+    "audio/mpeg",
+    "audio/ogg",
+    "audio/flac",
+    "audio/wav",
+  ];
 
   // TODO type safe this
   // @ts-ignore
@@ -196,7 +201,7 @@ const Uploader = ({ uploadMode }) => {
           } else {
             response = await client.uploadFile(file, { onUploadProgress });
             const browserUrl = await client.getSkylinkUrl(response.skylink);
-            addSong({ srcLink: response.skylink, browserUrl });
+            addSong({ skylink: response.skylink, src: browserUrl });
           }
 
           const url = await client.getSkylinkUrl(response.skylink, {
