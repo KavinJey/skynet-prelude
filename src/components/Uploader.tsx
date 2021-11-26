@@ -115,7 +115,7 @@ const Uploader = ({ uploadMode }) => {
   const { client } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
   const [files, setFiles] = useState([]);
-  const acceptedFormats = ["audio/mpeg"];
+  const acceptedFormats = ["audio/mpeg", "audio/ogg", "audio/flac"];
 
   // TODO type safe this
   // @ts-ignore
