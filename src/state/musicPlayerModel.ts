@@ -49,7 +49,7 @@ export interface MusicPlayerModelType {
   deleteAudioFile: Action<MusicPlayerModelType, { title: string }>;
   updateAudioFile: Action<MusicPlayerModelType, { i: number; elem: any }>;
   clearAudioFiles: Action<MusicPlayerModelType>;
-  setRecentUploads: Action<MusicPlayerModelType, { files: Array<any>}>;
+  setRecentUploads: Action<MusicPlayerModelType, { files: Array<any> }>;
   loadData: Action<
     MusicPlayerModelType,
     Pick<MusicPlayerModelType, "playlists" | "audioLibrary">
@@ -104,7 +104,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   addAudioFileInDirectory: action(
     (state, { title, artist, cover, src, skylink, album }) => {
       console.log("this is the urls", src, skylink);
-      console.log(title, artist, cover, album)
+      console.log(title, artist, cover, album);
 
       state.audioLibrary[title] = {
         artist,
@@ -138,7 +138,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   }),
 
   setRecentUploads: action((state, { files }) => {
-      state.recentUploads = files
+    state.recentUploads = files;
   }),
 
   addNewSongToPlaylist: action((state, { song, playlistTitle }) => {
@@ -179,7 +179,11 @@ export const musicPlayerModel: MusicPlayerModelType = {
             "application/json"
           );
           const musicData = JSON.parse(await musicDataBlob.text());
-          if (musicData?.playlists && musicData?.audioLibrary && !Array.isArray(musicData?.audioLibrary)) {
+          if (
+            musicData?.playlists &&
+            musicData?.audioLibrary &&
+            !Array.isArray(musicData?.audioLibrary)
+          ) {
             actions.loadData({
               audioLibrary: musicData.audioLibrary,
               playlists: musicData.playlists,
