@@ -43,7 +43,7 @@ const Library = () => {
   return (
     <Container style={{ marginTop: "15%" }}>
       <Tab style={{ border: "1 solid #000" }} panes={panes} />
-      <PreludeMusicBar currentQueue={currentQueue} />
+      {/* <PreludeMusicBar currentQueue={currentQueue} /> */}
     </Container>
   );
 };

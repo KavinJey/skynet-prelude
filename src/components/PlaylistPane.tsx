@@ -14,9 +14,7 @@ const PlaylistPane = () => {
         My Library
       </Header>
       <p> Your collection of playlists</p>
-      <Container>
-        <PlaylistList />
-      </Container>
+      <Container>{/* <PlaylistList /> */}</Container>
     </Tab.Pane>
   );
 };

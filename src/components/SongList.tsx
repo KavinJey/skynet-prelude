@@ -44,7 +44,7 @@ const SongList = () => {
   return (
     <>
       <List divided relaxed>
-        {audioFiles.map((audioFile, i) => (
+        {Object.keys(audioFiles).map((audioFile, i) => (
           <List.Item key={i}>
             <List.Content>
               <List.Header as="a">

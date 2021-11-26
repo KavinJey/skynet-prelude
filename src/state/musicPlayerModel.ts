@@ -72,8 +72,8 @@ export const getFileDataFromMusicData = async (
   fileSystem: FileSystemDAC
 ): Promise<FileData> => {
   const musicRecordJSON = JSON.stringify({
-    audioLibrary: audioLibrary || [],
-    playlists: playlists || [],
+    audioLibrary: audioLibrary || {},
+    playlists: playlists || {},
   });
   const musicRecordBlob = new Blob([musicRecordJSON], {
     type: "application/json",
@@ -102,6 +102,8 @@ export const musicPlayerModel: MusicPlayerModelType = {
 
   addAudioFileInDirectory: action(
     (state, { title, artist, cover, src, skylink, album }) => {
+      console.log("this is the urls", src, skylink);
+
       state.audioLibrary[title] = {
         artist,
         cover,

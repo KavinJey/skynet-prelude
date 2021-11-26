@@ -6,7 +6,8 @@ import { useDropzone } from "react-dropzone";
 import { SkynetContext } from "../state/SkynetContext";
 
 import { Container, Header, Icon, Progress, Segment } from "semantic-ui-react";
-import { useStoreActions } from "easy-peasy";
+import { useStoreActions } from "../state/easy-peasy-typed";
+import { MUSIC_DATA_FOLDER_PATH, MUSIC_FOLDER_PATH } from "../state/store";
 
 const getFilePath = (file) => file.webkitRelativePath || file.path || file.name;
 
@@ -112,7 +113,7 @@ const UploadElement = ({ file, status, error, url = "", progress = 0 }) => {
 };
 
 const Uploader = ({ uploadMode }) => {
-  const { client } = useContext(SkynetContext);
+  const { fileSystem, client } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
   const [files, setFiles] = useState([]);
   const acceptedFormats = [
@@ -122,9 +123,9 @@ const Uploader = ({ uploadMode }) => {
     "audio/wav",
   ];
 
-  // TODO type safe this
-  // @ts-ignore
-  const addSong = useStoreActions((actions) => actions.music.addAudioFile);
+  const addAudioFileInDirectory = useStoreActions(
+    (actions) => actions.music.addAudioFileInDirectory
+  );
 
   const handleDrop = async (acceptedFiles) => {
     if (mode === "directory" && acceptedFiles.length) {
@@ -158,6 +159,9 @@ const Uploader = ({ uploadMode }) => {
     acceptedFiles.forEach((file) => {
       console.log(acceptedFormats.includes(file.type));
       console.log(file.type);
+      console.log(file.name);
+      console.log("found file", file);
+      console.log(fileSystem);
       if (!acceptedFormats.includes(file.type)) {
         onFileStateChange(file, {
           status: "error",
@@ -167,6 +171,7 @@ const Uploader = ({ uploadMode }) => {
 
         return;
       }
+
       const onUploadProgress = (progress) => {
         const status = progress === 1 ? "processing" : "uploading";
 
@@ -187,28 +192,31 @@ const Uploader = ({ uploadMode }) => {
         try {
           let response;
 
-          if (file.directory) {
-            const directory = file.files.reduce(
-              (acc, file) => ({ ...acc, [getRelativeFilePath(file)]: file }),
-              {}
-            );
+          const songFileData = await fileSystem.uploadFileData(
+            file,
+            file.name,
+            onUploadProgress
+          );
+          const createdSong = await fileSystem.createFile(
+            MUSIC_FOLDER_PATH,
+            file.name,
+            songFileData
+          );
 
-            response = await client.uploadDirectory(
-              directory,
-              encodeURIComponent(file.name),
-              { onUploadProgress }
+          if (createdSong.success) {
+            const browserUrl = await fileSystem.client.getSkylinkUrl(
+              songFileData.url
             );
+            addAudioFileInDirectory({
+              title: file.name,
+              skylink: songFileData.url,
+              src: browserUrl,
+            });
+
+            onFileStateChange(file, { status: "complete", url: browserUrl });
           } else {
-            response = await client.uploadFile(file, { onUploadProgress });
-            const browserUrl = await client.getSkylinkUrl(response.skylink);
-            addSong({ skylink: response.skylink, src: browserUrl });
+            throw Error(createdSong.error);
           }
-
-          const url = await client.getSkylinkUrl(response.skylink, {
-            subdomain: mode === "directory",
-          });
-
-          onFileStateChange(file, { status: "complete", url });
         } catch (error) {
           if (
             error.response &&

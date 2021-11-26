@@ -1,7 +1,7 @@
-// @ts-nocheck
 import { Container, Menu, Icon, Rail } from "semantic-ui-react";
-import { useStoreActions, useStoreState } from "easy-peasy";
-import { useState, useEffect } from "react";
+import { useStoreActions, useStoreState } from "../state/easy-peasy-typed";
+import { useContext, useEffect } from "react";
+import { SkynetContext } from "../state/SkynetContext";
 
 const PreludeMusicBar = ({ currentQueue }: { currentQueue: Array<any> }) => {
   const { loggedIn } = useStoreState((state) => state.mySky);
@@ -10,13 +10,11 @@ const PreludeMusicBar = ({ currentQueue }: { currentQueue: Array<any> }) => {
 
   useEffect(() => {
     // if we have MySky loaded
-    setLoading(true);
     if (mySky) {
       mySky.checkLogin().then((result) => {
         if (result) {
           fetchMusicDirectory({ mySky, player });
         }
-        setLoading(false);
       });
     }
   }, [mySky]);
