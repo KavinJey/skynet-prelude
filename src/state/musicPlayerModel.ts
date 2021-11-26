@@ -37,7 +37,7 @@ export interface MusicPlayerModelType {
   audioPlayerInstance: any;
   playing: boolean;
 
-  personalLibrary: Array<any>;
+  recentUploads: Array<any>;
   playlists: Playlists;
   audioLibrary: {
     [title: string]: ISongModel;
@@ -49,6 +49,7 @@ export interface MusicPlayerModelType {
   deleteAudioFile: Action<MusicPlayerModelType, { title: string }>;
   updateAudioFile: Action<MusicPlayerModelType, { i: number; elem: any }>;
   clearAudioFiles: Action<MusicPlayerModelType>;
+  setRecentUploads: Action<MusicPlayerModelType, { files: Array<any>}>;
   loadData: Action<
     MusicPlayerModelType,
     Pick<MusicPlayerModelType, "playlists" | "audioLibrary">
@@ -90,7 +91,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   loading: false,
   audioPlayerInstance: undefined,
   playing: false,
-  personalLibrary: [],
+  recentUploads: [],
   playlists: {},
   audioLibrary: {},
   currentQueue: [],
@@ -103,7 +104,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   addAudioFileInDirectory: action(
     (state, { title, artist, cover, src, skylink, album }) => {
       console.log("this is the urls", src, skylink);
-      console.log(title, artist, cover, album);
+      console.log(title, artist, cover, album)
 
       state.audioLibrary[title] = {
         artist,
@@ -136,6 +137,10 @@ export const musicPlayerModel: MusicPlayerModelType = {
     };
   }),
 
+  setRecentUploads: action((state, { files }) => {
+      state.recentUploads = files
+  }),
+
   addNewSongToPlaylist: action((state, { song, playlistTitle }) => {
     state.playlists[playlistTitle].songs.push(song);
   }),
@@ -149,46 +154,6 @@ export const musicPlayerModel: MusicPlayerModelType = {
   //       const musicPlayer = getStoreState().music.audioPlayerInstance;
   //       if (musicPlayer) {
   //         actions.setPlaying(!isPlaying);
-  //       }
-  //     }
-  //   ),
-  //   reloadMusicPlayer: thunkOn(
-  //     (actions, storeActions) => [
-  //       actions.addToQueue,
-  //       actions.clearQueue,
-  //       actions.playSong,
-  //     ],
-  //     (action, target, { getStoreState }) => {
-  //       const musicPlayer = getStoreState().music.audioPlayerInstance;
-  //       if (musicPlayer) {
-  //         musicPlayer.load();
-  //       }
-  //     }
-  //   ),
-  //   refreshLibrary: thunkOn(
-  //     (actions, storeActions) => actions.addAudioFile,
-  //     async (actions, target, { getStoreState, getStoreActions }) => {
-  //       const mySky = getStoreState().mySky.mySky;
-  //       if (mySky) {
-  //         actions.setLoading({ isLoading: true });
-
-  //         const response = await mySky.getJSON(
-  //           "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json"
-  //         );
-  //         const data = response.data;
-  //         console.log("THIS IS THE DATA COMING BACK FROM MYSKY", data);
-  //         console.log("full obj from mysky after refresh", response);
-  //         if (data) {
-  //           actions.loadAudioFiles({
-  //             audioFileItems: data.audioFileItems as Array<SongModel>,
-  //           });
-  //         } else {
-  //           await mySky.setJSON(
-  //             "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
-  //             { audioFileItems: [] }
-  //           );
-  //         }
-  //         actions.setLoading({ isLoading: false });
   //       }
   //     }
   //   ),
@@ -214,12 +179,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
             "application/json"
           );
           const musicData = JSON.parse(await musicDataBlob.text());
-          console.log("this is the musicData", musicData);
-          if (
-            musicData?.playlists &&
-            musicData?.audioLibrary &&
-            !Array.isArray(musicData?.audioLibrary)
-          ) {
+          if (musicData?.playlists && musicData?.audioLibrary && !Array.isArray(musicData?.audioLibrary)) {
             actions.loadData({
               audioLibrary: musicData.audioLibrary,
               playlists: musicData.playlists,

@@ -6,7 +6,7 @@ import { useDropzone } from "react-dropzone";
 import { SkynetContext } from "../state/SkynetContext";
 
 import { Container, Header, Icon, Progress, Segment } from "semantic-ui-react";
-import { useStoreActions } from "../state/easy-peasy-typed";
+import { useStoreActions, useStoreState } from "../state/easy-peasy-typed";
 import { MUSIC_DATA_FOLDER_PATH, MUSIC_FOLDER_PATH } from "../state/store";
 import UploadElement from "./UploadElement";
 
@@ -62,7 +62,13 @@ const createUploadErrorMessage = (error) => {
 const Uploader = ({ uploadMode }) => {
   const { fileSystem, client } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
-  const [files, setFiles] = useState([]);
+
+  const recentUploads = useStoreState((state) => state.music.recentUploads);
+  const setRecentUploads = useStoreActions(
+    (actions) => actions.music.setRecentUploads
+  );
+
+  const [files, setFiles] = useState(recentUploads);
   const acceptedFormats = [
     "audio/mpeg",
     "audio/ogg",
@@ -144,6 +150,7 @@ const Uploader = ({ uploadMode }) => {
         return;
       }
 
+      // TODO move this logic to async
       const upload = async () => {
         try {
           if (file.directory) {
@@ -218,6 +225,10 @@ const Uploader = ({ uploadMode }) => {
       inputElement.setAttribute("webkitdirectory", "true");
     if (mode === "file") inputElement.removeAttribute("webkitdirectory");
   }, [inputElement, mode]);
+
+  useEffect(() => {
+    setRecentUploads({ files });
+  }, [files, setRecentUploads]);
 
   return (
     <Container>

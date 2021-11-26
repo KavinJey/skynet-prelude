@@ -34,11 +34,6 @@ const NavigationBar = () => {
             route="library"
             currentRoute={location.pathname}
           />
-          <NavMenuItem
-            title="Playlists"
-            route="playlists"
-            currentRoute={location.pathname}
-          />
           {/* <NavMenuItem
             title="Search"
             route="search"

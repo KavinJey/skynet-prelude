@@ -1,10 +1,10 @@
-import { Header, Container, Tab } from "semantic-ui-react";
+import { Header, Container, Tab, Dimmer, Loader } from "semantic-ui-react";
 import { useEffect } from "react";
 import "react-jinke-music-player/assets/index.css";
 import PreludeMusicBar from "../components/PreludeMusicBar";
 import Uploader from "../components/Uploader";
 import LibraryPane from "../components/LibraryPane";
-import { useStoreState } from "easy-peasy";
+import { useStoreState } from "../state/easy-peasy-typed";
 import PlaylistPane from "../components/PlaylistPane";
 
 const tabTitleStyling = {
@@ -27,21 +27,23 @@ const panes = [
         <Header as="h1" color="violet" style={tabTitleStyling}>
           Upload Your Music
         </Header>
-        {/* @ts-ignore */}
-        <Uploader />
+        <Uploader uploadMode="file" />
       </Tab.Pane>
     ),
   },
 ];
 
 const Library = () => {
-  // @ts-ignore
   const currentQueue = useStoreState((state) => state.music.currentQueue);
+  const loading = useStoreState((state) => state.music.loading);
 
   useEffect(() => {}, [currentQueue]);
 
   return (
     <Container style={{ marginTop: "15%" }}>
+      <Dimmer active={loading}>
+        <Loader indeterminate> Loading Music Library </Loader>
+      </Dimmer>
       <Tab style={{ border: "1 solid #000" }} panes={panes} />
       {/* <PreludeMusicBar currentQueue={currentQueue} /> */}
     </Container>

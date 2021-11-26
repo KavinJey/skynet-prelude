@@ -62,7 +62,7 @@ const SkynetProvider = ({ children }) => {
         // await mySky.loadDacs(contentRecord);
 
         await mySky.loadDacs(fileSystem as any as DacLibrary);
-        await mySky.loadDacs(userProfile);
+        await mySky.loadDacs(userProfile); // TODO add profile info here
 
         // replace mySky in state object
         setSkynetState({ ...skynetState, mySky, player, fileSystem });
