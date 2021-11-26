@@ -8,7 +8,7 @@ const Upload = () => {
         Upload Your Music
       </Header>
       {/* @ts-ignore */}
-      <Uploader />
+      <Uploader uploadMode="directoryS" />
     </Container>
   );
 };

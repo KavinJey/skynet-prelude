@@ -103,6 +103,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   addAudioFileInDirectory: action(
     (state, { title, artist, cover, src, skylink, album }) => {
       console.log("this is the urls", src, skylink);
+      console.log(title, artist, cover, album);
 
       state.audioLibrary[title] = {
         artist,
@@ -213,7 +214,12 @@ export const musicPlayerModel: MusicPlayerModelType = {
             "application/json"
           );
           const musicData = JSON.parse(await musicDataBlob.text());
-          if (musicData?.playlists && musicData?.audioLibrary) {
+          console.log("this is the musicData", musicData);
+          if (
+            musicData?.playlists &&
+            musicData?.audioLibrary &&
+            !Array.isArray(musicData?.audioLibrary)
+          ) {
             actions.loadData({
               audioLibrary: musicData.audioLibrary,
               playlists: musicData.playlists,

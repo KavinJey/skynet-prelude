@@ -8,6 +8,7 @@ import { SkynetContext } from "../state/SkynetContext";
 import { Container, Header, Icon, Progress, Segment } from "semantic-ui-react";
 import { useStoreActions } from "../state/easy-peasy-typed";
 import { MUSIC_DATA_FOLDER_PATH, MUSIC_FOLDER_PATH } from "../state/store";
+import UploadElement from "./UploadElement";
 
 const getFilePath = (file) => file.webkitRelativePath || file.path || file.name;
 
@@ -58,60 +59,6 @@ const createUploadErrorMessage = (error) => {
   return `Critical error, please refresh the application and try again. ${error.message}`;
 };
 
-const UploadElement = ({ file, status, error, url = "", progress = 0 }) => {
-  return (
-    <Segment>
-      <div className="flex items-center">
-        {status === "uploading" && <Icon loading name="circle notch" />}
-        {status === "processing" && <Icon loading name="spinner" />}
-        {status === "complete" && <Icon name="check circle" />}
-        {status === "error" && <Icon name="delete" />}
-        <div>
-          <div>{file.name}</div>
-          <div>
-            <div>
-              {status === "uploading" && (
-                <span className="tabular-nums">
-                  Uploading {bytes(file.size * progress)} of {bytes(file.size)}
-                </span>
-              )}
-
-              {status === "processing" && (
-                <span className="text-palette-300">Processing...</span>
-              )}
-
-              {status === "complete" && <a href={url}>{url}</a>}
-
-              {status === "error" && error && (
-                <span className="text-error">{error}</span>
-              )}
-            </div>
-            <div>
-              {status === "uploading" && (
-                <span className="uppercase tabular-nums">
-                  {Math.floor(progress * 100)}%
-                  <span className="hidden desktop:inline"> completed</span>
-                </span>
-              )}
-              {status === "processing" && (
-                <span className="uppercase text-palette-300">Wait</span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Container>
-        {status !== "processing" &&
-          status !== "error" &&
-          status !== "complete" && (
-            <Progress size="tiny" percent={Math.floor(progress * 100)} />
-          )}
-      </Container>
-    </Segment>
-  );
-};
-
 const Uploader = ({ uploadMode }) => {
   const { fileSystem, client } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
@@ -121,6 +68,9 @@ const Uploader = ({ uploadMode }) => {
     "audio/ogg",
     "audio/flac",
     "audio/wav",
+    "mp3",
+    "wav",
+    "ogg",
   ];
 
   const addAudioFileInDirectory = useStoreActions(
@@ -134,6 +84,7 @@ const Uploader = ({ uploadMode }) => {
       acceptedFiles = [
         { name: rootDir, directory: true, files: acceptedFiles },
       ];
+      console.log("this is a directory", acceptedFiles);
     }
 
     setFiles((previousFiles) => [
@@ -161,12 +112,17 @@ const Uploader = ({ uploadMode }) => {
       console.log(file.type);
       console.log(file.name);
       console.log("found file", file);
-      console.log(fileSystem);
-      if (!acceptedFormats.includes(file.type)) {
+      if (
+        !acceptedFormats.includes(file.type) &&
+        !acceptedFormats.some((format) =>
+          format.includes(file.name.split(".")[1])
+        )
+      ) {
         onFileStateChange(file, {
           status: "error",
-          error:
-            "This file is not an supported format. Currently support mp3s.",
+          error: `This file is not an supported format. Currently support ${acceptedFormats
+            .toString()
+            .replaceAll("audio/", " ")}.`,
         });
 
         return;
@@ -190,32 +146,43 @@ const Uploader = ({ uploadMode }) => {
 
       const upload = async () => {
         try {
-          let response;
-
-          const songFileData = await fileSystem.uploadFileData(
-            file,
-            file.name,
-            onUploadProgress
-          );
-          const createdSong = await fileSystem.createFile(
-            MUSIC_FOLDER_PATH,
-            file.name,
-            songFileData
-          );
-
-          if (createdSong.success) {
-            const browserUrl = await fileSystem.client.getSkylinkUrl(
-              songFileData.url
+          if (file.directory) {
+            console.log("files are a dir", file.directory);
+            const directory = file.files.reduce(
+              (acc, file) => ({ ...acc, [getRelativeFilePath(file)]: file }),
+              {}
             );
-            addAudioFileInDirectory({
-              title: file.name,
-              skylink: songFileData.url,
-              src: browserUrl,
-            });
-
-            onFileStateChange(file, { status: "complete", url: browserUrl });
+            // response = await client.uploadDirectory(
+            //   directory,
+            //   encodeURIComponent(file.name),
+            //   { onUploadProgress }
+            // );
           } else {
-            throw Error(createdSong.error);
+            const songFileData = await fileSystem.uploadFileData(
+              file,
+              file.name,
+              onUploadProgress
+            );
+            const createdSong = await fileSystem.createFile(
+              MUSIC_FOLDER_PATH,
+              file.name,
+              songFileData
+            );
+
+            if (createdSong.success) {
+              const browserUrl = await fileSystem.client.getSkylinkUrl(
+                songFileData.url
+              );
+              addAudioFileInDirectory({
+                title: file.name,
+                skylink: songFileData.url,
+                src: browserUrl,
+              });
+
+              onFileStateChange(file, { status: "complete", url: browserUrl });
+            } else {
+              throw Error(createdSong.error);
+            }
           }
         } catch (error) {
           if (
