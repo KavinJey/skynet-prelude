@@ -1,17 +1,18 @@
 import { createContext, useState, useEffect } from "react";
-import { SkynetClient } from "skynet-js";
+import { DacLibrary, SkynetClient } from "skynet-js";
 import { FileSystemDAC } from "fs-dac-library";
+import * as Kokoro from "kokoro";
 
 // To import DAC, uncomment here, and 2 spots below.
 // import { ContentRecordDAC } from '@skynetlabs/content-record-library';
 import { UserProfileDAC } from "@skynethub/userprofile-library";
+import { SIA_DATA_DOMAIN, SIA_PORTAL } from "./store";
 
 const SkynetContext = createContext(undefined);
 
 // We'll define a portal to allow for developing on localhost.
 // When hosted on a skynet portal, SkynetClient doesn't need any arguments.
-const portal =
-  window.location.hostname === "localhost" ? "https://siasky.net" : undefined;
+const portal = SIA_PORTAL;
 
 // Initiate the SkynetClient
 const client = new SkynetClient(portal);
@@ -23,10 +24,10 @@ const contentRecord = null;
 const userProfile = new UserProfileDAC();
 const fileSystem = new FileSystemDAC();
 
-const dataDomain =
-  window.location.hostname === "localhost"
-    ? "localhost"
-    : "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA";
+const playerInitialize = new Kokoro.Kokoro();
+const playerState = playerInitialize.getState();
+
+const dataDomain = SIA_DATA_DOMAIN;
 
 const SkynetProvider = ({ children }) => {
   const [skynetState, setSkynetState] = useState({
@@ -36,6 +37,7 @@ const SkynetProvider = ({ children }) => {
     userProfile,
     fileSystem,
     dataDomain,
+    player: playerState,
   });
 
   useEffect(() => {
@@ -48,16 +50,17 @@ const SkynetProvider = ({ children }) => {
           debug: true,
           // dev: true,
         });
+        const player = skynetState.player;
 
         // load necessary DACs and permissions
         // Uncomment line below to load DACs
         // await mySky.loadDacs(contentRecord);
-        // await mySky.loadDacs(userProfile);
+        await mySky.loadDacs(userProfile);
 
-        // await mySky.loadDacs(fileSystem);
+        await mySky.loadDacs(fileSystem as any as DacLibrary);
 
         // replace mySky in state object
-        setSkynetState({ ...skynetState, mySky });
+        setSkynetState({ ...skynetState, mySky, player });
       } catch (e) {
         console.error(e);
       }

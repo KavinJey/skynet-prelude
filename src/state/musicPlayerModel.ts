@@ -1,7 +1,14 @@
 import { action, thunkOn, actionOn, Action, Thunk, ThunkOn } from "easy-peasy";
+import { FileData, FileSystemDAC } from "fs-dac-library";
 import { _Pick } from "underscore";
 import { MySkyModelType } from "./mySkyModel";
-import { StoreModel } from "./store";
+import {
+  MUSIC_DATA_FOLDER,
+  MUSIC_FOLDER,
+  MUSIC_RECORD_FILENAME,
+  MYSKY_RESOLVER_LINK,
+  StoreModel,
+} from "./store";
 
 export type SongModel = {
   name?: string;
@@ -15,7 +22,7 @@ export type SongModel = {
   done?: boolean;
 };
 
-interface Playlists {
+export interface Playlists {
   [title: string]: {
     songs: Array<SongModel>;
   };
@@ -28,7 +35,7 @@ export interface MusicPlayerModelType {
 
   personalLibrary: Array<any>;
   playlists: Playlists;
-  audioFileItems: Array<SongModel>;
+  audioLibrary: Array<SongModel>;
   currentQueue: Array<SongModel>;
 
   setLoading: Action<MusicPlayerModelType, { isLoading: boolean }>;
@@ -54,6 +61,30 @@ export interface MusicPlayerModelType {
   onLoginChange: ThunkOn<MusicPlayerModelType, {}, StoreModel>;
 }
 
+export const getFileDataFromMusicData = async (
+  {
+    audioLibrary,
+    playlists,
+  }: {
+    audioLibrary?: Array<any>;
+    playlists?: Playlists;
+  },
+  fileSystem: FileSystemDAC
+): Promise<FileData> => {
+  const musicRecordJSON = JSON.stringify({
+    audioLibrary: audioLibrary || [],
+    playlists: playlists || [],
+  });
+  const musicRecordBlob = new Blob([musicRecordJSON], {
+    type: "application/json",
+  });
+  const fileData = await fileSystem.uploadFileData(
+    musicRecordBlob,
+    MUSIC_RECORD_FILENAME
+  );
+  return fileData;
+};
+
 export const musicPlayerModel: MusicPlayerModelType = {
   // AudioFile State
   loading: false,
@@ -61,7 +92,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   playing: false,
   personalLibrary: [],
   playlists: {},
-  audioFileItems: [],
+  audioLibrary: [],
   currentQueue: [],
 
   // AudioFile Setters and CRUD operations
@@ -71,7 +102,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
 
   addAudioFile: action(
     (state, { songName, songArtist, cover, srcLink, browserUrl, done }) => {
-      state.audioFileItems.push({
+      state.audioLibrary.push({
         songName,
         songArtist,
         cover,
@@ -96,17 +127,17 @@ export const musicPlayerModel: MusicPlayerModelType = {
   //     currentSongToEdit.cover = payload.cover;
   //   }),
   deleteAudioFile: action((state, payload) => {
-    state.audioFileItems.splice(payload.index, 1);
+    state.audioLibrary.splice(payload.index, 1);
   }),
   updateAudioFile: action((state, payload) => {
-    state.audioFileItems[payload.i].done = payload.elem.checked;
+    state.audioLibrary[payload.i].done = payload.elem.checked;
   }),
   clearAudioFiles: action((state, payload) => {
-    state.audioFileItems = [];
+    state.audioLibrary = [];
   }),
   loadAudioFiles: action((state, { audioFileItems }) => {
     console.log("This is audio files coming after login");
-    state.audioFileItems = audioFileItems;
+    state.audioLibrary = audioFileItems;
   }),
 
   loadPlaylists: action((state, { playlists }) => {
@@ -217,25 +248,42 @@ export const musicPlayerModel: MusicPlayerModelType = {
         actions.setLoading({ isLoading: true });
 
         const mySky = target.payload.mySky;
-        console.log("THIS IS MYSKY OBJ");
-        console.log(mySky);
+        const fileSystem = target.payload.fileSystem;
+        console.log("THIS IS fs-dac OBJ");
+        console.log(fileSystem);
 
-        const response = await mySky.getJSON(
-          "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json"
+        const response = await fileSystem.getDirectoryIndex(
+          `${MYSKY_RESOLVER_LINK}/${MUSIC_DATA_FOLDER}`
         );
-        const data = response.data;
-        console.log("THIS IS THE DATA COMING BACK FROM MYSKY", data);
-        console.log("full obj from mysky", response);
-        if (data?.audioFileItems && data?.playlists) {
-          actions.loadAudioFiles({
-            audioFileItems: data.audioFileItems as Array<SongModel>,
-          });
-          actions.loadPlaylists({ playlists: data.playlists as Playlists });
+        console.log("THIS IS THE DATA COMING BACK FROM fs-dac", response);
+        if (response.directories) {
+          // console.log("full obj from mysky", response);
+          // if (data?.audioFileItems && data?.playlists) {
+          //   actions.loadAudioFiles({
+          //     audioFileItems: data.audioFileItems as Array<SongModel>,
+          //   });
+          //   actions.loadPlaylists({ playlists: data.playlists as Playlists });
         } else {
-          await mySky.setJSON(
-            "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
-            { audioFileItems: [], playlists: {} }
-          );
+          const res = fileSystem
+            .createDirectory(MYSKY_RESOLVER_LINK, MUSIC_FOLDER)
+            .then(async (result) => {
+              if (result.success) {
+                const musicRecordFileName = MUSIC_RECORD_FILENAME;
+                // Create empty json file with no info for initialization
+                const fileData = await getFileDataFromMusicData({}, fileSystem);
+                console.log("uploaded file to fs-dac", fileData);
+
+                const res = await fileSystem.createFile(
+                  `${MYSKY_RESOLVER_LINK}/${MUSIC_DATA_FOLDER}`,
+                  musicRecordFileName,
+                  fileData
+                );
+                console.log("result on fileSystem create file", res);
+              }
+            })
+            .catch((error) => {
+              console.log("failed to create directory", error);
+            });
         }
         actions.setLoading({ isLoading: false });
       }

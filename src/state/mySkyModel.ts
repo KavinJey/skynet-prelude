@@ -10,33 +10,49 @@ import {
 } from "easy-peasy";
 import { MySky } from "skynet-js";
 import { FileSystemDAC } from "fs-dac-library";
-import { MusicPlayerModelType } from "./musicPlayerModel";
-import { StoreModel } from "./store";
+import {
+  getFileDataFromMusicData,
+  MusicPlayerModelType,
+} from "./musicPlayerModel";
+import {
+  MUSIC_DATA_FOLDER_PATH,
+  MUSIC_RECORD_FILENAME,
+  MYSKY_RESOLVER_LINK,
+  StoreModel,
+} from "./store";
+import { file } from "@babel/types";
 export interface MySkyModelType {
   userID?: string;
   mySky?: MySky;
   fileSystem?: FileSystemDAC;
-  loggedIn: Computed<MySkyModelType, boolean>;
-  setMySky: Action<MySkyModelType, { mySky: MySky }>;
+  player?: any;
+  loggedIn?: Computed<MySkyModelType, boolean>;
+  setMySky?: Action<MySkyModelType, { mySky: MySky }>;
 
-  setFileSystem: Action<MySkyModelType, MySkyModelType>;
+  setFileSystem?: Action<MySkyModelType, MySkyModelType>;
+  setMusicPlayer?: Action<MySkyModelType, MySkyModelType>;
 
-  setUserID: Thunk<MySkyModelType, { userID: string; mySky?: MySky }>;
+  setUserID?: Thunk<
+    MySkyModelType,
+    { userID: string; mySky?: MySky; fileSystem?: FileSystemDAC }
+  >;
 
-  setValidUserID: Action<MySkyModelType, { userID: string }>;
+  setValidUserID?: Action<MySkyModelType, { userID: string }>;
 
-  setNullUserID: Action<MySkyModelType>;
+  setNullUserID?: Action<MySkyModelType>;
 
-  fetchUserID: Thunk<MySkyModelType, MySkyModelType>;
+  fetchUserID?: Thunk<MySkyModelType, MySkyModelType>;
+  fetchMusicDirectory?: Thunk<MySkyModelType, MySkyModelType>;
 
-  logout: Thunk<MySkyModelType, MySkyModelType>;
-  persistPreludeState: ThunkOn<MySkyModelType, any, StoreModel>;
+  logout?: Thunk<MySkyModelType, MySkyModelType>;
+  persistPreludeState?: ThunkOn<MySkyModelType, any, StoreModel>;
 }
 
 export const mySkyModel: MySkyModelType = {
   // MySky State
   userID: null, //only set through setUserID!
   mySky: null,
+  player: null,
   fileSystem: null,
   loggedIn: computed((state) => !!state.userID),
 
@@ -47,6 +63,11 @@ export const mySkyModel: MySkyModelType = {
 
   setFileSystem: action((state, { fileSystem }) => {
     state.fileSystem = fileSystem;
+  }),
+
+  setMusicPlayer: action((state, { player }) => {
+    console.log("look at this player", player);
+    state.player = player;
   }),
 
   setValidUserID: action((state, { userID }) => {
@@ -64,15 +85,21 @@ export const mySkyModel: MySkyModelType = {
   }),
 
   // MySky Thunks
-  fetchUserID: thunk(async (actions, { mySky }) => {
+  fetchUserID: thunk(async (actions, { mySky, player, fileSystem }) => {
     if (mySky) {
       actions.setMySky({ mySky });
+      actions.setMusicPlayer({ player });
+      actions.setFileSystem({ fileSystem });
       const userID = await mySky.userID();
       if (userID) {
-        actions.setUserID({ userID, mySky });
+        actions.setUserID({ userID, fileSystem, mySky });
       } else {
         actions.setUserID({ userID: null });
       }
+    }
+  }),
+  fetchMusicDirectory: thunk(async (actions, { mySky, fileSystem }) => {
+    if (mySky) {
     }
   }),
   logout: thunk(async (actions, { mySky }) => {
@@ -88,52 +115,72 @@ export const mySkyModel: MySkyModelType = {
       storeActions.music.addNewSongToPlaylist,
     ],
     async (actions, target, { getStoreState }) => {
-      const audioFileItems = getStoreState().music.audioFileItems;
+      const audioLibrary = getStoreState().music.audioLibrary;
       const playlists = getStoreState().music.playlists;
-      console.log("persisting the following", audioFileItems);
+      const userID = getStoreState().mySky.userID;
+
+      console.log("persisting the following", audioLibrary);
 
       console.log("persisting the following", playlists);
       const mySky = getStoreState().mySky.mySky;
+      const fileSystem = getStoreState().mySky.fileSystem;
 
       if (mySky) {
         console.log("persisting audio files to MySky");
-        const result = await mySky.setJSON(
-          "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
-          { audioFileItems, playlists }
+
+        const musicRecordFileName = MUSIC_RECORD_FILENAME;
+        const fileData = await getFileDataFromMusicData(
+          {
+            audioLibrary,
+            playlists,
+          },
+          fileSystem
         );
-        console.log("result of clienc call", result);
+
+        const fileUploadResult = await fileSystem.updateFile(
+          MUSIC_DATA_FOLDER_PATH,
+          musicRecordFileName,
+          fileData
+        );
+
+        // const result = await mySky.setJSON(
+        //   "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
+        //   { audioFileItems, playlists }
+        // );
+        console.log("result of clienc call", fileUploadResult);
       }
     }
   ),
 
-  //    onFileSystemSet: thunkOn(
-  //     (actions, storeActions) => actions.setFileSystem,
-  //     async (actions, { payload }, { getStoreActions, getStoreState }) => {
-  //       // logging in, call loadAudioFiles
+  //  fetchMusicDirectory: thunk(
+  //   (actions, storeActions) => actions.setFileSystem,
+  //   async (actions, { player, fileSystem }, { getStoreActions}) => {
+  //     // logging in, call loadAudioFiles
 
-  //       const fs = payload.fileSystem.client
+  //     const fs = payload.fileSystem.client
 
-  //       if (payload.userID) {
-  //         const setLoading = getStoreActions().music.setLoading;
-  //         setLoading({ isLoading: true });
+  //     if (payload.userID) {
+  //       const setLoading = getStoreActions().music.setLoading();
+  //       setLoading({ isLoading: true });
+  //       const userDirectory = `${MYSKY_RESOLVER_LINK}/prelude.json`
 
-  //         const res = await fs.getDirectoryIndex("AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json")
-  //         console.log('response from fs-dac directory call ', res)
+  //       const res = await fs.getDirectoryIndex(userDirectory)
+  //       console.log('response from fs-dac directory call ', res)
 
-  //         if (data) {
-  //           actions.loadAudioFiles({ audioFileItems: data.audioFileItems });
-  //         } else {
-  //           const res = await fs.createDirectory(
-  //             "localhost",
-  //             "prelude"
-  //           );
+  //       if (data) {
+  //         actions.loadAudioFiles({ audioFileItems: data.audioFileItems });
+  //       } else {
+  //         const res = await fs.createDirectory(
+  //           "localhost",
+  //           "prelude"
+  //         );
 
-  //           console.log("response for fs-dac on creating dir", res);
-  //         }
-  //         actions.setLoading({ isLoading: false });
+  //         console.log("response for fs-dac on creating dir", res);
   //       }
+  //       actions.setLoading({ isLoading: false });
   //     }
-  //    )
+  //   }
+  //  ),
   //   persistHNSEntriesState: thunkOn(
   //     (actions, storeActions) => [
   //       storeActions.hns.addEntry,

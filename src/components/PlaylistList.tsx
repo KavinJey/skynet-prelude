@@ -27,7 +27,7 @@ import EditSongForm from "./EditSongForm";
 const PlaylistList = () => {
   const [openNewPlaylistModal, setNewPlaylistModal] = useState(false);
   const playlists = useStoreState((state) => state.music.playlists);
-  const songs = useStoreState((state) => state.music.audioFileItems);
+  const songs = useStoreState((state) => state.music.audioLibrary);
   const addPlaylist = useStoreActions(
     (actions) => actions.music.addNewPlaylist
   );
