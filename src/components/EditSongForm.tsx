@@ -1,16 +1,34 @@
-import { Input, Button, Form, Segment, Image } from "semantic-ui-react";
+import {
+  Input,
+  Button,
+  Form,
+  Segment,
+  Image,
+  Container,
+} from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
 
 import copy from "copy-text-to-clipboard";
 
 function EditSongForm({ title }: { title: string }) {
-  const editSong = useStoreState((state) => state.music.audioLibrary[title]);
-  const [localSongTitle, setSongTitle] = useState(editSong.title || "");
+  const currentSongToEdit = useStoreState(
+    (state) => state.music.audioLibrary[title]
+  );
+  const editSong = useStoreActions(
+    (actions) => actions.music.prepareDetailsToAudioFile
+  );
+  const [currentTitle, setCurrentTitle] = useState(currentSongToEdit.title);
+  const [localSongTitle, setSongTitle] = useState(
+    currentSongToEdit.title || ""
+  );
   const [localCover, setCover] = useState<File>();
-  const [localArtist, setSongArtist] = useState(editSong?.artist || "");
-
-  const [preview, setPreview] = useState(editSong?.cover || "");
+  const [localArtist, setSongArtist] = useState(
+    currentSongToEdit?.artist || ""
+  );
+  const [localAlbum, setLocalAlbum] = useState(currentSongToEdit?.album || "");
+  const [preview, setPreview] = useState(currentSongToEdit?.cover || "");
+  const [changeImage, setChangeImage] = useState(false);
 
   const addMessage = useStoreActions((actions) => actions.ui.addMessage);
 
@@ -27,17 +45,19 @@ function EditSongForm({ title }: { title: string }) {
     return () => URL.revokeObjectURL(objectUrl);
   }, [localCover]);
 
+  useEffect(() => {}, [currentSongToEdit]);
+
   return (
     <Segment>
       <Form
         onSubmit={() => {
-          // addSongDetails({
-          //   ...audioFile,
-          //   songName: localSongTitle,
-          //   songArtist: localArtist,
-          //   cover: localCover,
-          // });
-          // modalToggle(false);
+          editSong({
+            title: localSongTitle,
+            artist: localArtist,
+            currentTitle: currentTitle,
+            coverFile: localCover,
+            album: localAlbum,
+          });
         }}
       >
         <Form.Group>
@@ -45,7 +65,7 @@ function EditSongForm({ title }: { title: string }) {
             <label>Song Title</label>
             <Input
               onChange={(e) => setSongTitle(e.target.value)}
-              placeholder={editSong.title}
+              placeholder={currentSongToEdit.title}
               value={localSongTitle}
             />
           </Form.Field>
@@ -54,51 +74,75 @@ function EditSongForm({ title }: { title: string }) {
             <label>Artist</label>
             <Input
               onChange={(e) => setSongArtist(e.target.value)}
-              placeholder={editSong.artist}
+              placeholder={currentSongToEdit.artist}
               value={localArtist}
             />
           </Form.Field>
 
           <Form.Field>
-            <label>Cover</label>
-
-            {preview && (
-              <Image src={preview} size="medium" alt="album cover image" />
-            )}
+            <label>Album</label>
             <Input
-              type="file"
-              onChange={(e) => {
-                if (!e.target.files || e.target.files.length === 0) {
-                  setCover(undefined);
-                  return;
-                }
-
-                // I've kept this example simple by using the first image instead of multiple
-                setCover(e.target.files[0]);
-                console.log("this is the image", e.target.files[0]);
-              }}
+              onChange={(e) => setLocalAlbum(e.target.value)}
+              placeholder={currentSongToEdit.album}
+              value={localAlbum}
             />
           </Form.Field>
         </Form.Group>
         <Form.Group>
           <Form.Field>
+            <label>Cover</label>
+
+            {preview && (
+              <>
+                <Image src={preview} size="small" alt="album cover image" />
+                <Button
+                  size="small"
+                  color="pink"
+                  onClick={() => setChangeImage(true)}
+                >
+                  Change Image
+                </Button>
+              </>
+            )}
+            {(!preview || changeImage) && (
+              <Input
+                type="file"
+                onChange={(e) => {
+                  if (!e.target.files || e.target.files.length === 0) {
+                    setCover(undefined);
+                    return;
+                  }
+
+                  // I've kept this example simple by using the first image instead of multiple
+                  setCover(e.target.files[0]);
+                  setChangeImage(false);
+                  console.log("this is the image", e.target.files[0]);
+                }}
+              />
+            )}
+          </Form.Field>
+        </Form.Group>
+        <Form.Group>
+          <Form.Field>
             <Input
+              readOnly
               action={{
                 color: "purple",
                 labelPosition: "right",
                 icon: "copy",
                 content: "Skylink",
                 onClick: async (e) => {
-                  await copy(editSong.skylink);
+                  await copy(currentSongToEdit.skylink);
                   addMessage({ message: "Skylink copied to clipboard!" });
                 },
               }}
-              defaultValue={editSong.skylink}
+              defaultValue={currentSongToEdit.skylink}
             />
           </Form.Field>
 
           <Form.Field>
             <Input
+              readOnly
               action={{
                 color: "purple",
                 labelPosition: "right",
@@ -106,11 +150,11 @@ function EditSongForm({ title }: { title: string }) {
                 content: "Browser Link",
                 onClick: async (e) => {
                   // src could be string array bc type is from kokoro player
-                  copy(editSong.src as string);
+                  copy(currentSongToEdit.src as string);
                   addMessage({ message: "Browser link copied to clipboard!" });
                 },
               }}
-              defaultValue={editSong.src}
+              defaultValue={currentSongToEdit.src}
             />
           </Form.Field>
 

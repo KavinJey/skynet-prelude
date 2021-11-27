@@ -50,7 +50,10 @@ const Library = () => {
   return (
     <Container style={{ marginTop: "15%" }}>
       <Dimmer active={loading}>
-        <Loader indeterminate> Loading Music Library </Loader>
+        <Loader indeterminate>
+          {" "}
+          Logging into MySky... &amp; <br /> loading Music Library...{" "}
+        </Loader>
       </Dimmer>
       <Tab style={{ border: "1 solid #000" }} panes={panes} />
 

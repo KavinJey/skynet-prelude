@@ -1,10 +1,11 @@
-import { action, thunkOn, Action, ThunkOn } from "easy-peasy";
+import { action, thunkOn, Action, ThunkOn, Thunk, thunk } from "easy-peasy";
 import { FileData, FileSystemDAC } from "fs-dac-library";
 import { ISong } from "kokoro";
 import {
   MUSIC_DATA_FOLDER,
   MUSIC_DATA_FOLDER_PATH,
   MUSIC_FOLDER,
+  MUSIC_FOLDER_PATH,
   MUSIC_RECORD_FILENAME,
   MYSKY_RESOLVER_LINK,
   StoreModel,
@@ -51,6 +52,22 @@ export interface MusicPlayerModelType {
   loadData: Action<
     MusicPlayerModelType,
     Pick<MusicPlayerModelType, "playlists" | "audioLibrary">
+  >;
+  prepareDetailsToAudioFile: Thunk<
+    MusicPlayerModelType,
+    Pick<ISongModel, "album" | "artist" | "title"> & {
+      currentTitle: string;
+      coverFile: File;
+    },
+    {},
+    StoreModel
+  >;
+
+  addDetailsToAudioFile: Action<
+    MusicPlayerModelType,
+    Pick<ISongModel, "album" | "artist" | "cover" | "title"> & {
+      currentTitle: string;
+    }
   >;
   addNewPlaylist: Action<
     MusicPlayerModelType,
@@ -113,6 +130,84 @@ export const musicPlayerModel: MusicPlayerModelType = {
       };
     }
   ),
+
+  addDetailsToAudioFile: action(
+    (state, { album, artist, title, currentTitle, cover }) => {
+      if (title !== currentTitle) {
+        const newSong = state.audioLibrary[currentTitle];
+        newSong.title = title;
+        newSong.artist = artist;
+        newSong.cover = cover;
+        newSong.album = album;
+
+        delete state.audioLibrary[currentTitle];
+        state.audioLibrary[title] = newSong;
+      } else {
+        state.audioLibrary[title] = {
+          ...state.audioLibrary[title],
+          title,
+          artist,
+          cover,
+          album,
+        };
+      }
+    }
+  ),
+
+  prepareDetailsToAudioFile: thunk(
+    async (
+      actions,
+      { album, artist, title, currentTitle, coverFile },
+      { getStoreState, getStoreActions }
+    ) => {
+      const addMessage = getStoreActions().ui.addMessage;
+
+      if (coverFile) {
+        actions.setLoading(true);
+
+        const fileSystem = getStoreState().mySky.fileSystem;
+
+        // File name is {songTitle}-cover.{picture ext}
+        const fileName = `${title}-cover${coverFile.name.split(".")[1]}`;
+        const coverFileData = await fileSystem.uploadFileData(
+          coverFile,
+          fileName
+        );
+        const cover = await fileSystem.createFile(
+          MUSIC_FOLDER_PATH,
+          fileName,
+          coverFileData
+        );
+        if (cover.success) {
+          const browserUrl = await fileSystem.client.getSkylinkUrl(
+            coverFileData.url
+          );
+          actions.setLoading(false);
+          actions.addDetailsToAudioFile({
+            cover: browserUrl,
+            currentTitle,
+            album,
+            artist,
+            title,
+          });
+          addMessage({ message: `Saving details to file - ${currentTitle}` });
+        }
+      } else {
+        actions.addDetailsToAudioFile({
+          currentTitle,
+          album,
+          artist,
+          title,
+          cover: "",
+        });
+
+        addMessage({ message: `Saving details to file - ${currentTitle}` });
+      }
+
+      // Set all elements to values passed, values will be default if not provided by user on save
+    }
+  ),
+
   deleteAudioFile: action((state, { title }) => {
     delete state.audioLibrary[title];
   }),
