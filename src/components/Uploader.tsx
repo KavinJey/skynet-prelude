@@ -5,24 +5,12 @@ import path from "path-browserify";
 import { useDropzone } from "react-dropzone";
 import { SkynetContext } from "../state/SkynetContext";
 
-import { Container, Header, Icon, Progress, Segment } from "semantic-ui-react";
+import { Container, Header, Icon, Segment } from "semantic-ui-react";
 import { useStoreActions, useStoreState } from "../state/easy-peasy-typed";
-import { MUSIC_DATA_FOLDER_PATH, MUSIC_FOLDER_PATH } from "../state/store";
+import { MUSIC_FOLDER_PATH } from "../state/store";
 import UploadElement from "./UploadElement";
 
 const getFilePath = (file) => file.webkitRelativePath || file.path || file.name;
-
-const getRelativeFilePath = (file) => {
-  const filePath = getFilePath(file);
-  const { root, dir, base } = path.parse(filePath);
-  const relative = path
-    .normalize(dir)
-    .slice(root.length)
-    .split(path.sep)
-    .slice(1);
-
-  return path.join(...relative, base);
-};
 
 const getRootDirectory = (file) => {
   const filePath = getFilePath(file);
@@ -60,7 +48,7 @@ const createUploadErrorMessage = (error) => {
 };
 
 const Uploader = ({ uploadMode }) => {
-  const { fileSystem, client } = useContext(SkynetContext);
+  const { fileSystem } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
 
   const recentUploads = useStoreState((state) => state.music.recentUploads);
@@ -155,10 +143,6 @@ const Uploader = ({ uploadMode }) => {
         try {
           if (file.directory) {
             console.log("files are a dir", file.directory);
-            const directory = file.files.reduce(
-              (acc, file) => ({ ...acc, [getRelativeFilePath(file)]: file }),
-              {}
-            );
             // response = await client.uploadDirectory(
             //   directory,
             //   encodeURIComponent(file.name),
@@ -187,6 +171,7 @@ const Uploader = ({ uploadMode }) => {
               });
 
               onFileStateChange(file, { status: "complete", url: browserUrl });
+              setRecentUploads({ files });
             } else {
               throw Error(createdSong.error);
             }
@@ -214,7 +199,7 @@ const Uploader = ({ uploadMode }) => {
     });
   };
 
-  const { getRootProps, getInputProps, isDragActive, inputRef } = useDropzone({
+  const { getRootProps, getInputProps, inputRef } = useDropzone({
     onDrop: handleDrop,
   });
   const inputElement = inputRef.current;
@@ -225,10 +210,6 @@ const Uploader = ({ uploadMode }) => {
       inputElement.setAttribute("webkitdirectory", "true");
     if (mode === "file") inputElement.removeAttribute("webkitdirectory");
   }, [inputElement, mode]);
-
-  useEffect(() => {
-    setRecentUploads({ files });
-  }, [files, setRecentUploads]);
 
   return (
     <Container>

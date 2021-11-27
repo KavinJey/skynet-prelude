@@ -1,21 +1,31 @@
-//  @ts-nocheck
-// TODO: make typesafe
-import { Input, Button, Form, Segment, Label, List } from "semantic-ui-react";
-import { useState, useRef, useEffect } from "react";
+import { Input, Button, Form, Segment, Image } from "semantic-ui-react";
+import { useEffect, useState } from "react";
 import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
-import clipboard from "clipboardy";
+
+import copy from "copy-text-to-clipboard";
 
 function EditSongForm({ title }: { title: string }) {
-  const addSongDetails = useStoreActions(
-    (actions) => actions.music.addAudioFileDetails
-  );
-
   const editSong = useStoreState((state) => state.music.audioLibrary[title]);
   const [localSongTitle, setSongTitle] = useState(editSong.title || "");
-  const [localCover, setCover] = useState(editSong?.cover || "");
+  const [localCover, setCover] = useState<File>();
   const [localArtist, setSongArtist] = useState(editSong?.artist || "");
 
+  const [preview, setPreview] = useState(editSong?.cover || "");
+
   const addMessage = useStoreActions((actions) => actions.ui.addMessage);
+
+  useEffect(() => {
+    if (!localCover) {
+      setPreview(undefined);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(localCover);
+    setPreview(objectUrl);
+
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [localCover]);
 
   return (
     <Segment>
@@ -51,26 +61,56 @@ function EditSongForm({ title }: { title: string }) {
 
           <Form.Field>
             <label>Cover</label>
+
+            {preview && (
+              <Image src={preview} size="medium" alt="album cover image" />
+            )}
             <Input
               type="file"
-              onChange={(e) => setCover(e.target.value)}
-              placeholder={editSong.cover}
-              value={localCover}
+              onChange={(e) => {
+                if (!e.target.files || e.target.files.length === 0) {
+                  setCover(undefined);
+                  return;
+                }
+
+                // I've kept this example simple by using the first image instead of multiple
+                setCover(e.target.files[0]);
+                console.log("this is the image", e.target.files[0]);
+              }}
             />
           </Form.Field>
+        </Form.Group>
+        <Form.Group>
           <Form.Field>
             <Input
               action={{
                 color: "purple",
                 labelPosition: "right",
                 icon: "copy",
-                content: "SkyLink (copy)",
-                onclick: async (e) => {
-                  await clipboard.write(editSong.skyLink);
+                content: "Skylink",
+                onClick: async (e) => {
+                  await copy(editSong.skylink);
                   addMessage({ message: "Skylink copied to clipboard!" });
                 },
               }}
               defaultValue={editSong.skylink}
+            />
+          </Form.Field>
+
+          <Form.Field>
+            <Input
+              action={{
+                color: "purple",
+                labelPosition: "right",
+                icon: "copy",
+                content: "Browser Link",
+                onClick: async (e) => {
+                  // src could be string array bc type is from kokoro player
+                  copy(editSong.src as string);
+                  addMessage({ message: "Browser link copied to clipboard!" });
+                },
+              }}
+              defaultValue={editSong.src}
             />
           </Form.Field>
 
@@ -83,29 +123,6 @@ function EditSongForm({ title }: { title: string }) {
             type="submit"
           />
         </Form.Group>
-
-        <List horizontal selection>
-          <List.Item>
-            <Label horizontal color="purple">
-              SkyLink (click to copy)
-            </Label>
-
-            {/* <CopyToClipboard
-              onCopy={() =>
-                addMessage({ message: "Skylink copied to clipboard!" })
-              }
-              text={editSong.skylink}
-            >
-              <span> {editSong.skylink}</span>
-            </CopyToClipboard> */}
-          </List.Item>
-
-          <List.Item>
-            <Label horizontal color="purple">
-              Browser Link
-            </Label>
-          </List.Item>
-        </List>
       </Form>
     </Segment>
   );

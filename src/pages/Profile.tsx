@@ -1,13 +1,11 @@
-//  @ts-nocheck
-// TODO: make typesafe
 import { useContext, useState, useEffect } from "react";
 import { Header, Container } from "semantic-ui-react";
 import { SkynetContext } from "../state/SkynetContext";
-import { useStoreState } from "easy-peasy";
+import { useStoreState } from "../state/easy-peasy-typed";
 
 const Profile = () => {
   const { userProfile } = useContext(SkynetContext);
-  const { loggedIn, userID } = useStoreState((store) => store.mySky);
+  const { userID } = useStoreState((store) => store.mySky);
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
@@ -19,7 +17,7 @@ const Profile = () => {
       console.log("end userprofile");
     });
 
-    userProfile.getPreferences(userID).then((prefs) => {
+    userProfile.getPreferences(userID, { skapp: "prelude" }).then((prefs) => {
       console.log("prefs:", prefs);
     });
 
@@ -33,7 +31,7 @@ const Profile = () => {
     //   .then(() => {
     //     console.log('profileSet');
     //   });
-  }, [userID]);
+  }, [userID, userProfile]);
 
   return (
     <>

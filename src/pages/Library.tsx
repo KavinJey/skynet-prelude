@@ -1,7 +1,14 @@
-import { Header, Container, Tab, Dimmer, Loader } from "semantic-ui-react";
+import {
+  Header,
+  Container,
+  Tab,
+  Dimmer,
+  Loader,
+  Label,
+  Segment,
+} from "semantic-ui-react";
 import { useEffect } from "react";
 import "react-jinke-music-player/assets/index.css";
-import PreludeMusicBar from "../components/PreludeMusicBar";
 import Uploader from "../components/Uploader";
 import LibraryPane from "../components/LibraryPane";
 import { useStoreState } from "../state/easy-peasy-typed";
@@ -36,6 +43,7 @@ const panes = [
 const Library = () => {
   const currentQueue = useStoreState((state) => state.music.currentQueue);
   const loading = useStoreState((state) => state.music.loading);
+  const isLoggedIn = useStoreState((state) => state.mySky.loggedIn);
 
   useEffect(() => {}, [currentQueue]);
 
@@ -45,6 +53,16 @@ const Library = () => {
         <Loader indeterminate> Loading Music Library </Loader>
       </Dimmer>
       <Tab style={{ border: "1 solid #000" }} panes={panes} />
+
+      {!isLoggedIn && (
+        <Segment>
+          {" "}
+          <Label color="purple" as="h1">
+            {" "}
+            Please login to access library{" "}
+          </Label>
+        </Segment>
+      )}
       {/* <PreludeMusicBar currentQueue={currentQueue} /> */}
     </Container>
   );

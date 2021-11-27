@@ -1,16 +1,6 @@
 //  @ts-nocheck
 // TODO: make typesafe
-import {
-  Sidebar,
-  Container,
-  Segment,
-  Message,
-  Transition,
-  Icon,
-  Button,
-  Sticky,
-  Rail,
-} from "semantic-ui-react";
+import { Segment, Message, Transition, Rail } from "semantic-ui-react";
 import { useStoreState, useStoreActions } from "easy-peasy";
 import { useState, useEffect } from "react";
 
@@ -20,7 +10,7 @@ const MessageList = ({ messages, dismissMessage }) => {
       <div key={id}>
         <Transition animation="fade up" duration={500} visible={!dismissed}>
           <Message
-            onDismiss={(i) => dismissMessage({ id })}
+            onDismiss={() => dismissMessage({ id })}
             floating
             negative={negative}
           >
@@ -36,11 +26,9 @@ const MessageList = ({ messages, dismissMessage }) => {
 
 const MessageDisplay = () => {
   const { error, messages } = useStoreState((state) => state.ui);
-  const { resetError, dismissMessage } = useStoreActions(
-    (actions) => actions.ui
-  );
-  const [visible, setVisible] = useState(false);
-  const [errorText, setErrorText] = useState("Default Error Text");
+  const { dismissMessage } = useStoreActions((actions) => actions.ui);
+  const [, setVisible] = useState(false);
+  const [, setErrorText] = useState("Default Error Text");
 
   useEffect(() => {
     if (error) {

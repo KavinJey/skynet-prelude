@@ -1,14 +1,6 @@
 // TODO: make typesafe
 
-import {
-  action,
-  thunk,
-  thunkOn,
-  computed,
-  Action,
-  Thunk,
-  createTypedHooks,
-} from "easy-peasy";
+import { action, thunk, Action, Thunk } from "easy-peasy";
 import _ from "underscore";
 
 interface uiMessageModel {
@@ -62,7 +54,7 @@ export const uiModel: UiModelType = {
       return item.dismissed;
     });
     state.messages = _.reject(notYetDismissed, (item) => {
-      return item.id == id;
+      return item.id === id;
     });
   }),
 

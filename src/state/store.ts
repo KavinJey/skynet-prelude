@@ -1,4 +1,4 @@
-import { createStore, Store } from "easy-peasy";
+import { createStore } from "easy-peasy";
 import { mySkyModel, MySkyModelType } from "./mySkyModel";
 import { uiModel, UiModelType } from "./uiModel";
 import { musicPlayerModel, MusicPlayerModelType } from "./musicPlayerModel";

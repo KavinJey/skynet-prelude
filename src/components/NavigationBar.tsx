@@ -1,4 +1,4 @@
-import { Container, Menu, Icon, Rail, Image } from "semantic-ui-react";
+import { Container, Menu, Image } from "semantic-ui-react";
 import { NavLink, useLocation } from "react-router-dom";
 import MySkyButton from "./MySkyButton";
 import MessageDisplay from "./MessageDisplay";

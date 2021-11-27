@@ -1,7 +1,4 @@
-import React from "react";
-import { Tab, Header, Container, Card } from "semantic-ui-react";
-import SongList from "./SongList";
-import PlaylistList from "./PlaylistList";
+import { Tab, Header, Container } from "semantic-ui-react";
 
 const tabTitleStyling = {
   padding: "1em",

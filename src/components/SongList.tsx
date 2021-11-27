@@ -1,12 +1,8 @@
 //  @ts-nocheck
 // TODO: make typesafe
 import {
-  Checkbox,
   List,
-  Button,
   Image,
-  Loader,
-  Table,
   Menu,
   Segment,
   Divider,
@@ -14,19 +10,18 @@ import {
   Container,
   Placeholder,
   Modal,
-  Header,
 } from "semantic-ui-react";
 import { useState } from "react";
 import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
-import ReactJkMusicPlayer from "react-jinke-music-player";
 import "react-jinke-music-player/assets/index.css";
 import EditSongForm from "./EditSongForm";
 
 const SongList = () => {
   const [openSongEditModal, setSongEditModal] = useState(false);
   const audioFiles = useStoreState((state) => state.music.audioLibrary);
-  const { updateAudioFile, deleteAudioFile, playSong, addToQueue } =
-    useStoreActions((actions) => actions.music);
+  const { deleteAudioFile, playSong, addToQueue } = useStoreActions(
+    (actions) => actions.music
+  );
   const isPlaying = useStoreState((state) => state.music.playing);
 
   const [currentSongEdit, setCurrentSongEdit] = useState({});

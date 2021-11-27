@@ -1,8 +1,6 @@
-import { action, thunkOn, actionOn, Action, Thunk, ThunkOn } from "easy-peasy";
+import { action, thunkOn, Action, ThunkOn } from "easy-peasy";
 import { FileData, FileSystemDAC } from "fs-dac-library";
 import { ISong } from "kokoro";
-import { _Pick } from "underscore";
-import { MySkyModelType } from "./mySkyModel";
 import {
   MUSIC_DATA_FOLDER,
   MUSIC_DATA_FOLDER_PATH,
@@ -44,7 +42,7 @@ export interface MusicPlayerModelType {
   };
   currentQueue: Array<ISong>;
 
-  setLoading: Action<MusicPlayerModelType, { isLoading: boolean }>;
+  setLoading: Action<MusicPlayerModelType, boolean>;
   addAudioFileInDirectory: Action<MusicPlayerModelType, ISongModel>;
   deleteAudioFile: Action<MusicPlayerModelType, { title: string }>;
   updateAudioFile: Action<MusicPlayerModelType, { i: number; elem: any }>;
@@ -56,7 +54,7 @@ export interface MusicPlayerModelType {
   >;
   addNewPlaylist: Action<
     MusicPlayerModelType,
-    { playlistTitle: string; songs: Array<string> }
+    { playlistTitle: string; songs?: Array<string> }
   >;
   addNewSongToPlaylist: Action<
     MusicPlayerModelType,
@@ -97,16 +95,16 @@ export const musicPlayerModel: MusicPlayerModelType = {
   currentQueue: [],
 
   // AudioFile Setters and CRUD operations
-  setLoading: action((state, { isLoading }) => {
+  setLoading: action((state, isLoading) => {
     state.loading = isLoading;
   }),
 
   addAudioFileInDirectory: action(
     (state, { title, artist, cover, src, skylink, album }) => {
-      console.log("this is the urls", src, skylink);
-      console.log(title, artist, cover, album);
+      const strippedTitle = title.split(".")[0];
 
       state.audioLibrary[title] = {
+        title: strippedTitle,
         artist,
         cover,
         src,
@@ -162,7 +160,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
     async (actions, target) => {
       // logging in, call loadAudioFiles
       if (target.payload.userID) {
-        actions.setLoading({ isLoading: true });
+        actions.setLoading(true);
 
         const fileSystem = target.payload.fileSystem;
         console.log("THIS IS fs-dac OBJ");
@@ -209,7 +207,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
               console.error("failed to create directory", error);
             });
         }
-        actions.setLoading({ isLoading: false });
+        actions.setLoading(false);
       }
     }
   ),

@@ -10,17 +10,12 @@ import {
 } from "easy-peasy";
 import { MySky } from "skynet-js";
 import { FileSystemDAC } from "fs-dac-library";
-import {
-  getFileDataFromMusicData,
-  MusicPlayerModelType,
-} from "./musicPlayerModel";
+import { getFileDataFromMusicData } from "./musicPlayerModel";
 import {
   MUSIC_DATA_FOLDER_PATH,
   MUSIC_RECORD_FILENAME,
-  MYSKY_RESOLVER_LINK,
   StoreModel,
 } from "./store";
-import { file } from "@babel/types";
 export interface MySkyModelType {
   userID?: string;
   mySky?: MySky;

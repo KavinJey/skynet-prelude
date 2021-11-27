@@ -1,7 +1,6 @@
 import { Segment, Icon, Container, Progress } from "semantic-ui-react";
 import bytes from "bytes";
 import EditSongForm from "./EditSongForm";
-import { useStoreState } from "../state/easy-peasy-typed";
 //  TODO MAKE UPLOAD ELEMENT HAVE FORM FOR FURTHER INFO
 
 const UploadElement: React.FC<{
