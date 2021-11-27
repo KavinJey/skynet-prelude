@@ -1,5 +1,7 @@
 import { Segment, Icon, Container, Progress } from "semantic-ui-react";
 import bytes from "bytes";
+import EditSongForm from "./EditSongForm";
+import { useStoreState } from "../state/easy-peasy-typed";
 //  TODO MAKE UPLOAD ELEMENT HAVE FORM FOR FURTHER INFO
 
 const UploadElement: React.FC<{
@@ -9,6 +11,8 @@ const UploadElement: React.FC<{
   url: string;
   progress: number;
 }> = ({ file, status, error, url = "", progress = 0 }) => {
+  console.log("this is file", file);
+
   return (
     <Segment>
       <div className="flex items-center">
@@ -30,7 +34,7 @@ const UploadElement: React.FC<{
                 <span className="text-palette-300">Processing...</span>
               )}
 
-              {status === "complete" && <a href={url}>{url}</a>}
+              {status === "complete" && <EditSongForm title={file.name} />}
 
               {status === "error" && error && (
                 <span className="text-error">{error}</span>

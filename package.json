@@ -7,6 +7,7 @@
     "@babel/core": "^7.16.0",
     "bytes": "^3.1.0",
     "caniuse-lite": "^1.0.30001280",
+    "copy-text-to-clipboard": "^3.0.1",
     "craco-babel-loader-plugin": "^1.0.3",
     "easy-peasy": "^5.0.3",
     "fomantic-ui-css": "^2.8.7",
