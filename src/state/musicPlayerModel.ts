@@ -46,8 +46,6 @@ export type ISongModel = ISong & {
 
 export interface MusicPlayerModelType {
   loading: boolean;
-  audioPlayerInstance: any;
-  playing: boolean;
   player?: any;
 
   recentUploads: Array<any>;
@@ -55,13 +53,10 @@ export interface MusicPlayerModelType {
   audioLibrary: {
     [title: string]: ISongModel;
   };
-  currentQueue: Array<ISong>;
 
   setLoading: Action<MusicPlayerModelType, boolean>;
   addAudioFileInDirectory: Action<MusicPlayerModelType, ISongModel>;
   deleteAudioFile: Action<MusicPlayerModelType, { title: string }>;
-  updateAudioFile: Action<MusicPlayerModelType, { i: number; elem: any }>;
-  clearAudioFiles: Action<MusicPlayerModelType>;
   setRecentUploads: Action<MusicPlayerModelType, { files: Array<any> }>;
   playSong: Action<MusicPlayerModelType, { song: ISongModel }>;
   loadData: Action<
@@ -120,13 +115,10 @@ export const getFileDataFromMusicData = async (
 export const musicPlayerModel: MusicPlayerModelType = {
   // AudioFile State
   loading: false,
-  audioPlayerInstance: undefined,
-  playing: false,
   player: null,
   recentUploads: [],
   playlists: {},
   audioLibrary: {},
-  currentQueue: [],
 
   // AudioFile Setters and CRUD operations
   setLoading: action((state, isLoading) => {
@@ -238,12 +230,6 @@ export const musicPlayerModel: MusicPlayerModelType = {
 
   deleteAudioFile: action((state, { title }) => {
     state.audioLibrary = _.omit(state.audioLibrary, title);
-  }),
-  updateAudioFile: action((state, payload) => {
-    state.audioLibrary[payload.i].done = payload.elem.checked;
-  }),
-  clearAudioFiles: action((state, payload) => {
-    state.audioLibrary = {};
   }),
   loadData: action((state, { audioLibrary, playlists }) => {
     state.audioLibrary = audioLibrary;
