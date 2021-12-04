@@ -20,12 +20,10 @@ export interface MySkyModelType {
   userID?: string;
   mySky?: MySky;
   fileSystem?: FileSystemDAC;
-  player?: any;
   loggedIn?: Computed<MySkyModelType, boolean>;
   setMySky?: Action<MySkyModelType, { mySky: MySky }>;
 
   setFileSystem?: Action<MySkyModelType, MySkyModelType>;
-  setMusicPlayer?: Action<MySkyModelType, MySkyModelType>;
 
   setUserID?: Thunk<
     MySkyModelType,
@@ -36,7 +34,7 @@ export interface MySkyModelType {
 
   setNullUserID?: Action<MySkyModelType>;
 
-  fetchUserID?: Thunk<MySkyModelType, MySkyModelType>;
+  fetchUserID?: Thunk<MySkyModelType, MySkyModelType & { player: any }>;
   fetchMusicDirectory?: Thunk<MySkyModelType, MySkyModelType>;
 
   logout?: Thunk<MySkyModelType, MySkyModelType>;
@@ -47,7 +45,6 @@ export const mySkyModel: MySkyModelType = {
   // MySky State
   userID: null, //only set through setUserID!
   mySky: null,
-  player: null,
   fileSystem: null,
   loggedIn: computed((state) => !!state.userID),
 
@@ -58,11 +55,6 @@ export const mySkyModel: MySkyModelType = {
 
   setFileSystem: action((state, { fileSystem }) => {
     state.fileSystem = fileSystem;
-  }),
-
-  setMusicPlayer: action((state, { player }) => {
-    console.log("look at this player", player);
-    state.player = player;
   }),
 
   setValidUserID: action((state, { userID }) => {
@@ -80,19 +72,23 @@ export const mySkyModel: MySkyModelType = {
   }),
 
   // MySky Thunks
-  fetchUserID: thunk(async (actions, { mySky, player, fileSystem }) => {
-    if (mySky) {
-      actions.setMySky({ mySky });
-      actions.setMusicPlayer({ player });
-      actions.setFileSystem({ fileSystem });
-      const userID = await mySky.userID();
-      if (userID) {
-        actions.setUserID({ userID, fileSystem, mySky });
-      } else {
-        actions.setUserID({ userID: null });
+  fetchUserID: thunk(
+    async (actions, { mySky, player, fileSystem }, { getStoreActions }) => {
+      if (mySky) {
+        const storeActions = getStoreActions();
+        actions.setMySky({ mySky });
+        // @ts-ignore
+        storeActions.music.setMusicPlayer({ player });
+        actions.setFileSystem({ fileSystem });
+        const userID = await mySky.userID();
+        if (userID) {
+          actions.setUserID({ userID, fileSystem, mySky });
+        } else {
+          actions.setUserID({ userID: null });
+        }
       }
     }
-  }),
+  ),
   fetchMusicDirectory: thunk(async (actions, { mySky, fileSystem }) => {
     if (mySky) {
     }

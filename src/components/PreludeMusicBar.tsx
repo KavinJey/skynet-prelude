@@ -13,7 +13,7 @@ const PreludeMusicBar = ({ currentQueue }: { currentQueue: Array<any> }) => {
     if (mySky) {
       mySky.checkLogin().then((result) => {
         if (result) {
-          fetchMusicDirectory({ mySky, player });
+          //   fetchMusicDirectory({ mySky, player });
         }
       });
     }

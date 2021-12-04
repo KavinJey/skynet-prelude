@@ -10,10 +10,15 @@ import {
   Header,
   Icon,
 } from "semantic-ui-react";
+import { useStoreActions } from "../state/easy-peasy-typed";
 import { ISongModel } from "../state/musicPlayerModel";
 
 const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
   const [deleteSongConfirm, setDeleteSongConfirm] = useState(false);
+  const title = `${song?.title}.${song?.ext}`;
+  const deleteSong = useStoreActions(
+    (actions) => actions.music.deleteAudioFile
+  );
 
   useEffect(() => {
     console.log("this is props ", song);
@@ -84,7 +89,7 @@ const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
           <Button.Group>
             <Button color="purple" icon="play" />
             <Button color="purple" icon="pause" />
-            <Button color="purple" icon="shuffle" />
+            <Button color="purple" icon="add" />
 
             <Button
               color="purple"
@@ -135,7 +140,11 @@ const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
           <Button
             color="red"
             inverted
-            onClick={() => setDeleteSongConfirm(false)}
+            onClick={() => {
+              setDeleteSongConfirm(false);
+              console.log("this is a title", title);
+              deleteSong({ title });
+            }}
           >
             <Icon name="remove" /> Yes
           </Button>

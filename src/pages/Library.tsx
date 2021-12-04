@@ -41,11 +41,11 @@ const panes = [
 ];
 
 const Library = () => {
-  const currentQueue = useStoreState((state) => state.music.currentQueue);
+  const library = useStoreState((state) => state.music.audioLibrary);
   const loading = useStoreState((state) => state.music.loading);
   const isLoggedIn = useStoreState((state) => state.mySky.loggedIn);
 
-  useEffect(() => {}, [currentQueue]);
+  useEffect(() => {}, [library]);
 
   return (
     <Container style={{ marginTop: "15%" }}>
@@ -66,7 +66,6 @@ const Library = () => {
           </Label>
         </Segment>
       )}
-      {/* <PreludeMusicBar currentQueue={currentQueue} /> */}
     </Container>
   );
 };
