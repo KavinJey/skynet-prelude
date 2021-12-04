@@ -29,7 +29,7 @@ export interface Playlists {
   };
 }
 
-type ISongModel = ISong & { skylink: string; done?: boolean, ext?: string };
+export type ISongModel = ISong & { skylink: string; done?: boolean, ext?: string };
 
 export interface MusicPlayerModelType {
   loading: boolean;

@@ -28,7 +28,7 @@ const App = () => {
               <Route path="/profile">
                 <Profile />
               </Route>
-              <Route path="/edit-song/:title">
+              <Route path="/edit-song/:skylink">
                 <EditSong />
               </Route>
 

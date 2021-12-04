@@ -1,4 +1,4 @@
-import { Input, Button, Form, Segment, Image, Label } from "semantic-ui-react";
+import { Input, Button, Form, Segment, Image, Label, Container } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
 
@@ -47,6 +47,8 @@ function EditSongForm({ title, pageMode }: { title: string, pageMode?: boolean }
 
   return (
     <Segment>
+        <Container fluid>
+
       <Form
         onSubmit={() => {
           editSong({
@@ -171,6 +173,7 @@ function EditSongForm({ title, pageMode }: { title: string, pageMode?: boolean }
           />
         </Form.Group>
       </Form>
+      </Container>
     </Segment>
   );
 }
