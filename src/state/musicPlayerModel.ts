@@ -1,14 +1,9 @@
 import {
   action,
   thunkOn,
-  Action,
-  ThunkOn,
-  Thunk,
   thunk,
-  computed,
 } from "easy-peasy";
 import { FileData, FileSystemDAC } from "fs-dac-library";
-import { ISong } from "kokoro";
 import _ from "underscore";
 import {
   MUSIC_DATA_FOLDER,
@@ -17,79 +12,10 @@ import {
   MUSIC_FOLDER_PATH,
   MUSIC_RECORD_FILENAME,
   MYSKY_RESOLVER_LINK,
-  StoreModel,
 } from "./store";
+import { MusicPlayerModelType } from "./types";
 
-export type SongModel = {
-  name?: string;
-  musicSrc?: string;
-  singer?: string;
-  cover?: string;
-  browserUrl?: string;
-  srcLink?: string;
-  songName?: string;
-  songArtist?: string;
-  done?: boolean;
-};
 
-export interface Playlists {
-  [title: string]: {
-    songs: Array<ISong>;
-  };
-}
-
-export type ISongModel = ISong & {
-  skylink: string;
-  done?: boolean;
-  ext?: string;
-};
-
-export interface MusicPlayerModelType {
-  loading: boolean;
-  player?: any;
-
-  recentUploads: Array<any>;
-  playlists: Playlists;
-  audioLibrary: {
-    [title: string]: ISongModel;
-  };
-
-  setLoading: Action<MusicPlayerModelType, boolean>;
-  addAudioFileInDirectory: Action<MusicPlayerModelType, ISongModel>;
-  deleteAudioFile: Action<MusicPlayerModelType, { title: string }>;
-  setRecentUploads: Action<MusicPlayerModelType, { files: Array<any> }>;
-  playSong: Action<MusicPlayerModelType, { song: ISongModel }>;
-  loadData: Action<
-    MusicPlayerModelType,
-    Pick<MusicPlayerModelType, "playlists" | "audioLibrary">
-  >;
-  prepareDetailsToAudioFile: Thunk<
-    MusicPlayerModelType,
-    Pick<ISongModel, "album" | "artist" | "title"> & {
-      currentTitle: string;
-      coverFile: File;
-    },
-    {},
-    StoreModel
-  >;
-
-  addDetailsToAudioFile: Action<
-    MusicPlayerModelType,
-    Pick<ISongModel, "album" | "artist" | "cover" | "title"> & {
-      currentTitle: string;
-    }
-  >;
-  addNewPlaylist: Action<
-    MusicPlayerModelType,
-    { playlistTitle: string; songs?: Array<string> }
-  >;
-  addNewSongToPlaylist: Action<
-    MusicPlayerModelType,
-    { song: ISongModel; playlistTitle: string }
-  >;
-  onLoginChange: ThunkOn<MusicPlayerModelType, {}, StoreModel>;
-  setMusicPlayer?: Action<MusicPlayerModelType, MusicPlayerModelType>;
-}
 
 export const getFileDataFromMusicData = async (
   {

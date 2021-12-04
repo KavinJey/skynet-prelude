@@ -3,43 +3,14 @@ import {
   thunk,
   thunkOn,
   computed,
-  Computed,
-  Action,
-  Thunk,
-  ThunkOn,
 } from "easy-peasy";
-import { MySky } from "skynet-js";
-import { FileSystemDAC } from "fs-dac-library";
 import { getFileDataFromMusicData } from "./musicPlayerModel";
 import {
   MUSIC_DATA_FOLDER_PATH,
   MUSIC_RECORD_FILENAME,
-  StoreModel,
 } from "./store";
-export interface MySkyModelType {
-  userID?: string;
-  mySky?: MySky;
-  fileSystem?: FileSystemDAC;
-  loggedIn?: Computed<MySkyModelType, boolean>;
-  setMySky?: Action<MySkyModelType, { mySky: MySky }>;
+import { MySkyModelType } from "./types";
 
-  setFileSystem?: Action<MySkyModelType, MySkyModelType>;
-
-  setUserID?: Thunk<
-    MySkyModelType,
-    { userID: string; mySky?: MySky; fileSystem?: FileSystemDAC }
-  >;
-
-  setValidUserID?: Action<MySkyModelType, { userID: string }>;
-
-  setNullUserID?: Action<MySkyModelType>;
-
-  fetchUserID?: Thunk<MySkyModelType, MySkyModelType & { player: any }>;
-  fetchMusicDirectory?: Thunk<MySkyModelType, MySkyModelType>;
-
-  logout?: Thunk<MySkyModelType, MySkyModelType>;
-  persistPreludeState?: ThunkOn<MySkyModelType, any, StoreModel>;
-}
 
 export const mySkyModel: MySkyModelType = {
   // MySky State

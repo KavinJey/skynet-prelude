@@ -1,7 +1,8 @@
-import { createStore } from "easy-peasy";
-import { mySkyModel, MySkyModelType } from "./mySkyModel";
-import { uiModel, UiModelType } from "./uiModel";
-import { musicPlayerModel, MusicPlayerModelType } from "./musicPlayerModel";
+import { createStore,  } from "easy-peasy";
+import { mySkyModel } from "./mySkyModel";
+import { uiModel } from "./uiModel";
+import { musicPlayerModel } from "./musicPlayerModel";
+import { MusicPlayerModelType, MySkyModelType, UiModelType } from "./types";
 
 export const MYSKY_RESOLVER_LINK =
   window.location.hostname === "localhost"
