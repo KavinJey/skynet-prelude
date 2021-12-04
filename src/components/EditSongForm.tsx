@@ -1,33 +1,24 @@
-import {
-  Input,
-  Button,
-  Form,
-  Segment,
-  Image,
-  Container,
-} from "semantic-ui-react";
+import { Input, Button, Form, Segment, Image, Label } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
 
 import copy from "copy-text-to-clipboard";
 
-function EditSongForm({ title }: { title: string }) {
+function EditSongForm({ title, pageMode }: { title: string, pageMode?: boolean }) {
   const currentSongToEdit = useStoreState(
     (state) => state.music.audioLibrary[title]
   );
+
   const editSong = useStoreActions(
     (actions) => actions.music.prepareDetailsToAudioFile
   );
-  const [currentTitle, setCurrentTitle] = useState(currentSongToEdit.title);
-  const [localSongTitle, setSongTitle] = useState(
-    currentSongToEdit.title || ""
-  );
+
+  const [currentTitle, setCurrentTitle] = useState("");
+  const [localSongTitle, setSongTitle] = useState("");
   const [localCover, setCover] = useState<File>();
-  const [localArtist, setSongArtist] = useState(
-    currentSongToEdit?.artist || ""
-  );
-  const [localAlbum, setLocalAlbum] = useState(currentSongToEdit?.album || "");
-  const [preview, setPreview] = useState(currentSongToEdit?.cover || "");
+  const [localArtist, setSongArtist] = useState("");
+  const [localAlbum, setLocalAlbum] = useState("");
+  const [preview, setPreview] = useState("");
   const [changeImage, setChangeImage] = useState(false);
 
   const addMessage = useStoreActions((actions) => actions.ui.addMessage);
@@ -45,7 +36,14 @@ function EditSongForm({ title }: { title: string }) {
     return () => URL.revokeObjectURL(objectUrl);
   }, [localCover]);
 
-  useEffect(() => {}, [currentSongToEdit]);
+  useEffect(() => {
+
+    console.log("thisis song", currentSongToEdit);
+    setCurrentTitle(currentSongToEdit?.title);
+    setLocalAlbum(currentSongToEdit?.album);
+    setPreview(currentSongToEdit?.cover);
+    setSongTitle(currentSongToEdit?.title);
+  }, [currentSongToEdit]);
 
   return (
     <Segment>
@@ -65,7 +63,7 @@ function EditSongForm({ title }: { title: string }) {
             <label>Song Title</label>
             <Input
               onChange={(e) => setSongTitle(e.target.value)}
-              placeholder={currentSongToEdit.title}
+              placeholder={currentSongToEdit?.title}
               value={localSongTitle}
             />
           </Form.Field>
@@ -74,7 +72,7 @@ function EditSongForm({ title }: { title: string }) {
             <label>Artist</label>
             <Input
               onChange={(e) => setSongArtist(e.target.value)}
-              placeholder={currentSongToEdit.artist}
+              placeholder={currentSongToEdit?.artist}
               value={localArtist}
             />
           </Form.Field>
@@ -83,10 +81,15 @@ function EditSongForm({ title }: { title: string }) {
             <label>Album</label>
             <Input
               onChange={(e) => setLocalAlbum(e.target.value)}
-              placeholder={currentSongToEdit.album}
+              placeholder={currentSongToEdit?.album}
               value={localAlbum}
             />
           </Form.Field>
+          {pageMode && <Form.Field>
+              File Name:{" "}
+
+                <Label horizontal color="purple">{title.trim()} </Label>
+              </Form.Field>}
         </Form.Group>
         <Form.Group>
           <Form.Field>
@@ -132,11 +135,11 @@ function EditSongForm({ title }: { title: string }) {
                 icon: "copy",
                 content: "Skylink",
                 onClick: async (e) => {
-                  await copy(currentSongToEdit.skylink);
+                  await copy(currentSongToEdit?.skylink);
                   addMessage({ message: "Skylink copied to clipboard!" });
                 },
               }}
-              defaultValue={currentSongToEdit.skylink}
+              defaultValue={currentSongToEdit?.skylink}
             />
           </Form.Field>
 
@@ -150,11 +153,11 @@ function EditSongForm({ title }: { title: string }) {
                 content: "Browser Link",
                 onClick: async (e) => {
                   // src could be string array bc type is from kokoro player
-                  copy(currentSongToEdit.src as string);
+                  copy(currentSongToEdit?.src as string);
                   addMessage({ message: "Browser link copied to clipboard!" });
                 },
               }}
-              defaultValue={currentSongToEdit.src}
+              defaultValue={currentSongToEdit?.src}
             />
           </Form.Field>
 

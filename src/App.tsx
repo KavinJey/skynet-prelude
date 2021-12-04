@@ -1,7 +1,7 @@
 import { Container } from "semantic-ui-react";
 import NavigationBar from "./components/NavigationBar";
 import MessageDisplay from "./components/MessageDisplay";
-import { Home, Library, RecentlyPlayed, Profile } from "./pages";
+import { Home, Library, RecentlyPlayed, Profile, EditSong } from "./pages";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { SkynetProvider } from "./state/SkynetContext";
 import { StoreProvider } from "easy-peasy";
@@ -27,6 +27,9 @@ const App = () => {
               </Route> */}
               <Route path="/profile">
                 <Profile />
+              </Route>
+              <Route path="/edit-song/:title">
+                <EditSong />
               </Route>
 
               {/* <Route path="/todo">

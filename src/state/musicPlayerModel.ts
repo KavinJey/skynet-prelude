@@ -29,7 +29,7 @@ export interface Playlists {
   };
 }
 
-type ISongModel = ISong & { skylink: string; done?: boolean };
+type ISongModel = ISong & { skylink: string; done?: boolean, ext?: string };
 
 export interface MusicPlayerModelType {
   loading: boolean;
@@ -119,9 +119,11 @@ export const musicPlayerModel: MusicPlayerModelType = {
   addAudioFileInDirectory: action(
     (state, { title, artist, cover, src, skylink, album }) => {
       const strippedTitle = title.split(".")[0];
+      const fileExtension = title.split(".")[1]
 
       state.audioLibrary[title] = {
         title: strippedTitle,
+        ext: fileExtension,
         artist,
         cover,
         src,
@@ -134,6 +136,9 @@ export const musicPlayerModel: MusicPlayerModelType = {
   addDetailsToAudioFile: action(
     (state, { album, artist, title, currentTitle, cover }) => {
       if (title !== currentTitle) {
+          console.log('this is the songdetails')
+          console.log(currentTitle)
+          console.log(title)
         const newSong = state.audioLibrary[currentTitle];
         newSong.title = title;
         newSong.artist = artist;

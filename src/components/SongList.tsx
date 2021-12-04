@@ -16,8 +16,21 @@ import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
 import "react-jinke-music-player/assets/index.css";
 import EditSongForm from "./EditSongForm";
 
+import { NavLink, useLocation } from "react-router-dom";
+
+const NavMenuItem = ({ title, route, currentRoute }) => {
+  const active = currentRoute === `/${route}`;
+  return (
+    <Menu.Item as={active ? null : NavLink} to={route} active={active}>
+      {title}
+    </Menu.Item>
+  );
+};
+
 const SongList = () => {
   const [openSongEditModal, setSongEditModal] = useState(false);
+  const location = useLocation();
+
   const audioFiles = useStoreState((state) => state.music.audioLibrary);
   const { deleteAudioFile, playSong, addToQueue } = useStoreActions(
     (actions) => actions.music
@@ -86,17 +99,20 @@ const SongList = () => {
                         <Icon name="play circle" />
                       )}
                     </Menu.Item>
-
                     <Menu.Item
                       name="Edit Song"
                       onClick={() => {
-                        setCurrentSongEdit(audioFile);
                         setSongEditModal(true);
                       }}
                     >
                       <Icon name="edit" />
-                    </Menu.Item>
-
+                    </Menu.Item>{" "}
+                    <NavMenuItem
+                      currentRoute={location.pathname}
+                      route={`/edit-song/${audioFile}/`}
+                      title="edit-song"
+                      key={i}
+                    />
                     <Menu.Item
                       name="Delete"
                       onClick={(event) => deleteAudioFile({ index: i })}
@@ -117,6 +133,12 @@ const SongList = () => {
                       <Icon name="add" />
                     </Menu.Item>
                   </Menu>
+                  {openSongEditModal && (
+                    <EditSongForm
+                      key={i}
+                      title={`${audioFiles[audioFile].title}.${audioFiles[audioFile].ext}`}
+                    />
+                  )}
                 </Segment>
               </List.Description>
             </List.Content>
