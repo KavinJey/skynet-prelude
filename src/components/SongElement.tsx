@@ -1,27 +1,19 @@
-import { useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
   List,
   Container,
   Placeholder,
-  Segment,
-  Menu,
-  Icon,
   Image,
+  Button,
+  Modal,
+  Header,
+  Icon,
 } from "semantic-ui-react";
 import { ISongModel } from "../state/musicPlayerModel";
 
-const NavMenuItem = ({ title, route, currentRoute }) => {
-  const active = currentRoute === `/${route}`;
-  return (
-    <Menu.Item as={active ? null : NavLink} to={route} active={active}>
-      {title}
-    </Menu.Item>
-  );
-};
-
 const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
-  const location = useLocation();
+  const [deleteSongConfirm, setDeleteSongConfirm] = useState(false);
 
   useEffect(() => {
     console.log("this is props ", song);
@@ -29,51 +21,126 @@ const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
 
   return (
     <List.Item>
-      <List.Content>
-        <List.Header as="a">
-          <Container style={{ display: "flex" }}>
-            {song?.cover ? (
-              <Image style={{ marginRight: "2em" }} src={song.cover} />
-            ) : (
-              <Placeholder
-                style={{ height: 75, width: 75, marginRight: "2em" }}
-              >
-                <Placeholder.Image />
-                No Image
-              </Placeholder>
-            )}
-            <h5 style={{ marginRight: "2em" }}>Name: {song.title} </h5>
-            <h5>Artist: {song.artist} </h5>
-          </Container>
-        </List.Header>
-        <List.Description>
-          <a href={song.skylink}> Sia Link {song.skylink}</a> <br /> <br />
-          <a href={song.src as string}> Portal URL </a>
-          <Segment>
-            <Menu icon="labeled">
-              <Menu.Item name="Play Song">
-                {/* {isPlaying ? (
-                        <Icon name="pause circle" />
-                      ) : (
-                        <Icon name="play circle" />
-                      )} */}
-              </Menu.Item>
-              <Menu.Item name="Edit Song"></Menu.Item>{" "}
-              <NavMenuItem
-                currentRoute={location.pathname}
-                route={`/edit-song/${song.skylink.split("sia://")[1]}/`}
-                title="edit"
-              />{" "}
-              <Menu.Item name="Delete">
-                <Icon name="delete" />
-              </Menu.Item>
-              <Menu.Item name="Add">
-                <Icon name="add" />
-              </Menu.Item>
-            </Menu>
-          </Segment>
-        </List.Description>
-      </List.Content>
+      <Container
+        fluid
+        style={{
+          float: "left",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          {song?.cover ? (
+            <Image
+              size="tiny"
+              src={song.cover}
+              style={{
+                height: 50,
+                width: 50,
+                flexBasis: "4em",
+                marginRight: "1em",
+              }}
+            />
+          ) : (
+            <Placeholder
+              style={{
+                height: 50,
+                width: 50,
+                flexBasis: "4em",
+                marginRight: "1em",
+              }}
+            >
+              <Placeholder.Image />
+              No Image
+            </Placeholder>
+          )}
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flexBasis: "12em",
+              width: "12em",
+              height: "100%",
+            }}
+          >
+            <h3 style={{ color: song.title ? null : "grey" }}>
+              {song.title || "(unknown title)"}
+            </h3>
+            <p style={{ color: song.title ? null : "grey" }}>
+              {song.artist || "(unknown artist)"}
+            </p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1em",
+            alignItems: "flex-end",
+          }}
+        >
+          <Button.Group>
+            <Button color="purple" icon="play" />
+            <Button color="purple" icon="pause" />
+            <Button color="purple" icon="shuffle" />
+
+            <Button
+              color="purple"
+              icon="edit"
+              to={`/edit-song/${song.skylink.split("sia://")[1]}/`}
+              as={NavLink}
+            />
+
+            <Button
+              color="purple"
+              icon="delete"
+              onClick={() => setDeleteSongConfirm(true)}
+            />
+          </Button.Group>
+
+          <Button
+            color="purple"
+            label="Encrypted File"
+            labelPosition="left"
+            icon="download"
+            as="a"
+            href={song.src}
+          />
+        </div>
+      </Container>
+
+      <Modal
+        basic
+        onClose={() => setDeleteSongConfirm(false)}
+        onOpen={() => setDeleteSongConfirm(true)}
+        open={deleteSongConfirm}
+        size="small"
+      >
+        <Header icon>
+          <Icon name="archive" />
+          Delete Song?
+        </Header>
+        <Modal.Content>
+          <p>
+            Are you sure you'd like to delete this file from your Prelude music
+            library ?
+          </p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button basic inverted onClick={() => setDeleteSongConfirm(false)}>
+            <Icon name="cancel" /> No
+          </Button>
+          <Button
+            color="red"
+            inverted
+            onClick={() => setDeleteSongConfirm(false)}
+          >
+            <Icon name="remove" /> Yes
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </List.Item>
   );
 };

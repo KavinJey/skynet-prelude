@@ -1,8 +1,8 @@
-import { Tab, Header, Container } from "semantic-ui-react";
+import { Tab, Header, Container, Divider } from "semantic-ui-react";
 import SongList from "./SongList";
 
 const tabTitleStyling = {
-  padding: "1em",
+  paddingTop: "1em",
 };
 
 const LibraryPane = () => {
@@ -12,6 +12,7 @@ const LibraryPane = () => {
         My Library
       </Header>
       <p> Your collection of music</p>
+      <Divider />
       <Container>
         <SongList />
       </Container>

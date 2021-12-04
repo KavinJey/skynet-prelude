@@ -108,40 +108,39 @@ function EditSongForm({
               </Form.Field>
             )}
           </Form.Group>
-          <Form.Group>
-            <Form.Field>
-              <label>Cover</label>
 
-              {preview && (
-                <>
-                  <Image src={preview} size="small" alt="album cover image" />
-                  <Button
-                    size="small"
-                    color="pink"
-                    onClick={() => setChangeImage(true)}
-                  >
-                    Change Image
-                  </Button>
-                </>
-              )}
-              {(!preview || changeImage) && (
-                <Input
-                  type="file"
-                  onChange={(e) => {
-                    if (!e.target.files || e.target.files.length === 0) {
-                      setCover(undefined);
-                      return;
-                    }
+          <Form.Field>
+            <label>Cover</label>
 
-                    // I've kept this example simple by using the first image instead of multiple
-                    setCover(e.target.files[0]);
-                    setChangeImage(false);
-                    console.log("this is the image", e.target.files[0]);
-                  }}
-                />
-              )}
-            </Form.Field>
-          </Form.Group>
+            {preview && (
+              <>
+                <Image src={preview} size="small" alt="album cover image" />
+                <Button
+                  size="small"
+                  color="pink"
+                  onClick={() => setChangeImage(true)}
+                >
+                  Change Image
+                </Button>
+              </>
+            )}
+            {(!preview || changeImage) && (
+              <Input
+                type="file"
+                onChange={(e) => {
+                  if (!e.target.files || e.target.files.length === 0) {
+                    setCover(undefined);
+                    return;
+                  }
+
+                  // I've kept this example simple by using the first image instead of multiple
+                  setCover(e.target.files[0]);
+                  setChangeImage(false);
+                  console.log("this is the image", e.target.files[0]);
+                }}
+              />
+            )}
+          </Form.Field>
           <Form.Group>
             <Form.Field>
               <Input

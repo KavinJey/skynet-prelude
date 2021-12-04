@@ -6,16 +6,15 @@ import { useStoreState } from "../state/easy-peasy-typed";
 
 const EditSong = () => {
   const { skylink } = useParams<{ skylink: string }>();
-  const songTitle = useStoreState((state) => {
-    return state.music.audioLibrary[
+  const songTitle = useStoreState(
+    (state) =>
       Object.keys(state.music.audioLibrary)[
         Object.keys(state.music.audioLibrary).findIndex((songTitle) => {
           console.log(songTitle, skylink);
           return state.music.audioLibrary[songTitle].skylink.includes(skylink);
         })
       ]
-    ];
-  });
+  );
 
   const history = useHistory();
 
@@ -25,17 +24,15 @@ const EditSong = () => {
 
   return (
     <Segment style={{ marginTop: "15%" }}>
-      <Container>
-        <Button
-          color="purple"
-          onClick={() => history.goBack()}
-          content="Back"
-          icon="left arrow"
-          labelPosition="left"
-        />
+      <Button
+        color="purple"
+        onClick={() => history.goBack()}
+        content="Back"
+        icon="left arrow"
+        labelPosition="left"
+      />
 
-        {/* <EditSongForm pageMode title={songTitle[0]} /> */}
-      </Container>
+      <EditSongForm pageMode title={songTitle} />
     </Segment>
   );
 };
