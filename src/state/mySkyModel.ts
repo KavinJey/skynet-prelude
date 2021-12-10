@@ -44,12 +44,9 @@ export const mySkyModel: MySkyModelType = {
 
   // MySky Thunks
   fetchUserID: thunk(
-    async (actions, { mySky, player, fileSystem }, { getStoreActions }) => {
+    async (actions, { mySky, fileSystem }, { getStoreActions }) => {
       if (mySky) {
-        const storeActions = getStoreActions();
         actions.setMySky({ mySky });
-        // @ts-ignore
-        storeActions.music.setMusicPlayer({ player });
         actions.setFileSystem({ fileSystem });
         const userID = await mySky.userID();
         if (userID) {

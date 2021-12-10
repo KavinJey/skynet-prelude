@@ -1,4 +1,5 @@
 import { Tab, Header, Container } from "semantic-ui-react";
+import PlaylistList from "./PlaylistList";
 
 const tabTitleStyling = {
   padding: "1em",
@@ -11,7 +12,7 @@ const PlaylistPane = () => {
         My Library
       </Header>
       <p> Your collection of playlists</p>
-      <Container>{/* <PlaylistList /> */}</Container>
+      <Container><PlaylistList /></Container>
     </Tab.Pane>
   );
 };

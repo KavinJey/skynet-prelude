@@ -1,6 +1,6 @@
 import { Action, Computed, Thunk, ThunkOn } from "easy-peasy";
-import { FileSystemDAC } from "fs-dac-library";
-import { ISong } from "kokoro";
+import { DirectoryIndex, FileSystemDAC } from "fs-dac-library";
+import * as Kokoro from "kokoro";
 import { MySky } from "skynet-js";
 import { StoreModel } from "./store";
 
@@ -18,11 +18,11 @@ export type SongModel = {
 
 export interface Playlists {
   [title: string]: {
-    songs: Array<ISong>;
+    songs: Array<Kokoro.ISong>;
   };
 }
 
-export type ISongModel = ISong & {
+export type ISongModel = Kokoro.ISong & {
   skylink: string;
   done?: boolean;
   ext?: string;
@@ -30,22 +30,26 @@ export type ISongModel = ISong & {
 
 export interface MusicPlayerModelType {
   loading: boolean;
-  player?: any;
+  player?: Kokoro.Kokoro;
 
   recentUploads: Array<any>;
   playlists: Playlists;
   audioLibrary: {
     [title: string]: ISongModel;
   };
+  audioFilesDirectory?: DirectoryIndex,
+
 
   setLoading: Action<MusicPlayerModelType, boolean>;
   addAudioFileInDirectory: Action<MusicPlayerModelType, ISongModel>;
   deleteAudioFile: Action<MusicPlayerModelType, { title: string }>;
   setRecentUploads: Action<MusicPlayerModelType, { files: Array<any> }>;
+
+  initializePlayer: Action<MusicPlayerModelType>;
   playSong: Action<MusicPlayerModelType, { song: ISongModel }>;
   loadData: Action<
     MusicPlayerModelType,
-    Pick<MusicPlayerModelType, "playlists" | "audioLibrary">
+    Pick<MusicPlayerModelType, "playlists" | "audioLibrary" | "audioFilesDirectory">
   >;
   prepareDetailsToAudioFile: Thunk<
     MusicPlayerModelType,

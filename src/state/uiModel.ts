@@ -1,6 +1,6 @@
 // TODO: make typesafe
 
-import { action, thunk, Action, Thunk } from "easy-peasy";
+import { action, thunk } from "easy-peasy";
 import _ from "underscore";
 import { UiModelType } from "./types";
 

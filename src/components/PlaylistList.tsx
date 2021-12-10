@@ -1,5 +1,3 @@
-//  @ts-nocheck
-// TODO: make typesafe
 import {
   List,
   Button,
@@ -16,6 +14,7 @@ import {
 import { useState, useEffect } from "react";
 import { useStoreState, useStoreActions } from "../state/easy-peasy-typed";
 import "react-jinke-music-player/assets/index.css";
+import SongList from "./SongList";
 
 const PlaylistList = () => {
   const [openNewPlaylistModal, setNewPlaylistModal] = useState(false);
@@ -44,11 +43,11 @@ const PlaylistList = () => {
 
   const transformToOptions = (songs) => {
     if (songs) {
-      const transformedSongs = songs.map((audioFile, i) => ({
+      const transformedSongs = Object.keys(songs).map((audioFile, i) => ({
         key: i,
-        text: audioFile?.songName,
+        text: songs[audioFile]?.title,
         value: {
-          ...audioFile,
+          ...songs[audioFile],
         },
       }));
 
@@ -69,7 +68,7 @@ const PlaylistList = () => {
         onClose={() => setNewPlaylistModal(false)}
         onOpen={() => setNewPlaylistModal(true)}
         open={openNewPlaylistModal}
-        trigger={<Button>Add New Playlist</Button>}
+        trigger={<Button color="purple">Add New Playlist</Button>}
       >
         <Modal.Content>
           <Form
@@ -92,19 +91,13 @@ const PlaylistList = () => {
                 placeholder="Playlist Name"
               />
             </Form.Field>
-            <Dropdown
-              placeholder="Songs Select"
-              fluid
-              multiple
-              selection
-              onChange={(event, data) => {
-                setPlaylistForm({
-                  ...playlistForm,
-                  songs: data.value,
-                });
-              }}
-              options={transformToOptions(songs)}
-            />
+            <Dropdown 
+                multiple
+                options={transformToOptions(songs)}
+                selection
+                />
+                
+            
             <Button
               style={{ margin: "2em", alignSelf: "end" }}
               color="purple"
@@ -125,91 +118,7 @@ const PlaylistList = () => {
                 <List.Description>
                   <List relaxed>
                     {playlists[playlistKey].songs.map((song, i) => {
-                      <List.Item key={i}>
-                        <List.Content>
-                          <List.Header as="a">
-                            <Container style={{ display: "flex" }}>
-                              {song.cover ? (
-                                <Image
-                                  style={{ marginRight: "2em" }}
-                                  src={song.cover}
-                                />
-                              ) : (
-                                <Placeholder
-                                  style={{
-                                    height: 75,
-                                    width: 75,
-                                    marginRight: "2em",
-                                  }}
-                                >
-                                  <Placeholder.Image />
-                                  No Image
-                                </Placeholder>
-                              )}
-                              <h5 style={{ marginRight: "2em" }}>
-                                Name: {song.songName}{" "}
-                              </h5>
-                              <h5>Artist: {song.songArtist} </h5>
-                            </Container>
-                          </List.Header>
-                          <List.Description>
-                            <a href={song.srcLink}> Sia Link {song.srcLink}</a>{" "}
-                            <br /> <br />
-                            <a href={song.browserUrl}> Portal URL </a>
-                            <Segment>
-                              <Menu icon="labeled">
-                                <Menu.Item
-                                  name="Play Song"
-                                  onClick={(event) =>
-                                    playSong({
-                                      name: song.name,
-                                      singer: song.singer,
-                                      musicSrc: song.browserUrl,
-                                      cover: song.cover,
-                                    })
-                                  }
-                                >
-                                  {isPlaying ? (
-                                    <Icon name="pause circle" />
-                                  ) : (
-                                    <Icon name="play circle" />
-                                  )}
-                                </Menu.Item>
-
-                                <Menu.Item
-                                  name="Edit Song"
-                                  onClick={() => {
-                                    setCurrentSongEdit(song);
-                                    setSongEditModal(true);
-                                  }}
-                                >
-                                  <Icon name="edit" />
-                                </Menu.Item>
-
-                                <Menu.Item
-                                  name="Delete"
-                                  onClick={(event) => deletesong({ index: i })}
-                                >
-                                  <Icon name="delete" />
-                                </Menu.Item>
-                                <Menu.Item
-                                  name="Add"
-                                  onClick={(event) =>
-                                    addToQueue({
-                                      name: song.name,
-                                      singer: song.singer,
-                                      musicSrc: song.browserUrl,
-                                      cover: song.cover,
-                                    })
-                                  }
-                                >
-                                  <Icon name="add" />
-                                </Menu.Item>
-                              </Menu>
-                            </Segment>
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>;
+                     <SongList />
                     })}
                   </List>
                 </List.Description>

@@ -9,9 +9,10 @@ import {
   Modal,
   Header,
   Icon,
+  Label,
 } from "semantic-ui-react";
 import { useStoreActions } from "../state/easy-peasy-typed";
-import { ISongModel } from "../state/musicPlayerModel";
+import { ISongModel } from "../state/types";
 
 const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
   const [deleteSongConfirm, setDeleteSongConfirm] = useState(false);
@@ -19,6 +20,10 @@ const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
   const deleteSong = useStoreActions(
     (actions) => actions.music.deleteAudioFile
   );
+
+  const playSong = useStoreActions(
+      (actions) => actions.music.playSong
+  )
 
   useEffect(() => {
     console.log("this is props ", song);
@@ -71,9 +76,12 @@ const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
             }}
           >
             <h3 style={{ color: song.title ? null : "grey" }}>
-              {song.title || "(unknown title)"}
+              {song.title || "(unknown title)"}{" "}
+              <Label horizontal color="purple">
+                {song.ext}
+              </Label>
             </h3>
-            <p style={{ color: song.title ? null : "grey" }}>
+            <p style={{ color: song.artist ? null : "gray" }}>
               {song.artist || "(unknown artist)"}
             </p>
           </div>
@@ -87,7 +95,7 @@ const SongElement: React.FC<{ song: ISongModel }> = ({ song }) => {
           }}
         >
           <Button.Group>
-            <Button color="purple" icon="play" />
+            <Button color="purple" icon="play" onClick={() => playSong({song}) }/>
             <Button color="purple" icon="pause" />
             <Button color="purple" icon="add" />
 

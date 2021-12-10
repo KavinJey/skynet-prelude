@@ -30,8 +30,6 @@ const client = new SkynetClient(portal);
 const userProfile = new UserProfileDAC();
 const fileSystem = new FileSystemDAC();
 
-const playerInitialize = new Kokoro.Kokoro();
-const playerState = playerInitialize.getState();
 
 const dataDomain = SIA_DATA_DOMAIN;
 
@@ -42,7 +40,6 @@ const SkynetProvider = ({ children }) => {
     userProfile,
     fileSystem,
     dataDomain,
-    player: playerState,
   });
 
   useEffect(() => {
@@ -55,8 +52,7 @@ const SkynetProvider = ({ children }) => {
           debug: true,
           // dev: true,
         });
-        const player = skynetState.player;
-
+        
         // load necessary DACs and permissions
         // Uncomment line below to load DACs
         // await mySky.loadDacs(contentRecord);
@@ -65,7 +61,7 @@ const SkynetProvider = ({ children }) => {
         await mySky.loadDacs(userProfile); // TODO add profile info here
 
         // replace mySky in state object
-        setSkynetState({ ...skynetState, mySky, player, fileSystem });
+        setSkynetState({ ...skynetState, mySky, fileSystem });
       } catch (e) {
         console.error(e);
       }

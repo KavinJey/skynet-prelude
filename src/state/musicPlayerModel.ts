@@ -1,9 +1,6 @@
-import {
-  action,
-  thunkOn,
-  thunk,
-} from "easy-peasy";
+import { action, thunkOn, thunk } from "easy-peasy";
 import { FileData, FileSystemDAC } from "fs-dac-library";
+import * as Kokoro from "kokoro";
 import _ from "underscore";
 import {
   MUSIC_DATA_FOLDER,
@@ -14,8 +11,6 @@ import {
   MYSKY_RESOLVER_LINK,
 } from "./store";
 import { MusicPlayerModelType } from "./types";
-
-
 
 export const getFileDataFromMusicData = async (
   {
@@ -45,6 +40,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
   recentUploads: [],
   playlists: {},
   audioLibrary: {},
+  audioFilesDirectory: null, 
 
   // AudioFile Setters and CRUD operations
   setLoading: action((state, isLoading) => {
@@ -55,7 +51,19 @@ export const musicPlayerModel: MusicPlayerModelType = {
     state.player = player;
   }),
 
-  playSong: action((state, song) => {}),
+  initializePlayer: action((state) => {
+    const playerInitialize = new Kokoro.Kokoro();
+    state.player = playerInitialize;
+  }),
+
+  playSong: action((state, { song }) => {
+    if (state.player) {
+        console.log('playing song', song)
+        console.log('player', state.player)
+      state.player.setNextSong(song);
+      state.player.play();
+    }
+  }),
 
   addAudioFileInDirectory: action(
     (state, { title, artist, cover, src, skylink, album }) => {
@@ -157,9 +165,10 @@ export const musicPlayerModel: MusicPlayerModelType = {
   deleteAudioFile: action((state, { title }) => {
     state.audioLibrary = _.omit(state.audioLibrary, title);
   }),
-  loadData: action((state, { audioLibrary, playlists }) => {
+  loadData: action((state, { audioLibrary, playlists, audioFilesDirectory }) => {
     state.audioLibrary = audioLibrary;
     state.playlists = playlists;
+    state.audioFilesDirectory = audioFilesDirectory;
   }),
 
   addNewPlaylist: action((state, { playlistTitle, songs }) => {
@@ -208,6 +217,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
             actions.loadData({
               audioLibrary: musicData.audioLibrary,
               playlists: musicData.playlists,
+              audioFilesDirectory: response
             });
           }
         } else {
@@ -237,3 +247,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
 
   // AudioFile Thunks
 };
+function initializePlayer() {
+    throw new Error("Function not implemented.");
+}
+
