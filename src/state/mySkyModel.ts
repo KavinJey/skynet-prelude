@@ -19,7 +19,7 @@ export interface MySkyModelType {
   loggedIn: Computed<MySkyModelType, boolean>;
   setMySky: Action<MySkyModelType, { mySky: MySky }>;
 
-  setFileSystem: Action<MySkyModelType, MySkyModelType>;
+  setFileSystem: Action<MySkyModelType, { fileSystem: FileSystemDAC }>;
 
   setUserID: Thunk<MySkyModelType, { userID: string; mySky?: MySky }>;
 
@@ -64,9 +64,10 @@ export const mySkyModel: MySkyModelType = {
   }),
 
   // MySky Thunks
-  fetchUserID: thunk(async (actions, { mySky }) => {
+  fetchUserID: thunk(async (actions, { mySky, fileSystem }) => {
     if (mySky) {
       actions.setMySky({ mySky });
+      actions.setFileSystem({ fileSystem });
       const userID = await mySky.userID();
       if (userID) {
         actions.setUserID({ userID, mySky });

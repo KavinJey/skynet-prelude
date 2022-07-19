@@ -112,10 +112,10 @@ const UploadElement = ({ file, status, error, url = "", progress = 0 }) => {
 };
 
 const Uploader = ({ uploadMode }) => {
-  const { client } = useContext(SkynetContext);
+  const { client, fileSystem } = useContext(SkynetContext);
   const [mode, setMode] = useState(uploadMode ? uploadMode : "file");
   const [files, setFiles] = useState([]);
-  const acceptedFormats = ["audio/mpeg"];
+  const acceptedFormats = ["audio/mpeg", "audio/flac"];
 
   // TODO type safe this
   // @ts-ignore
@@ -194,7 +194,18 @@ const Uploader = ({ uploadMode }) => {
               { onUploadProgress }
             );
           } else {
-            response = await client.uploadFile(file, { onUploadProgress });
+            console.log("this is the file", file, file.name);
+            response = await fileSystem.uploadFileData(
+              file,
+              file.name,
+              onUploadProgress
+            );
+            const res = await fileSystem.createFile(
+              "prelude.hns/",
+              file.name,
+              response
+            );
+            console.log("this is response from fs ", response, fileSystem);
             const browserUrl = await client.getSkylinkUrl(response.skylink);
             addSong({ srcLink: response.skylink, browserUrl });
           }
@@ -205,6 +216,7 @@ const Uploader = ({ uploadMode }) => {
 
           onFileStateChange(file, { status: "complete", url });
         } catch (error) {
+          console.log("error from fs", error);
           if (
             error.response &&
             error.response.status === StatusCodes.TOO_MANY_REQUESTS
@@ -242,7 +254,7 @@ const Uploader = ({ uploadMode }) => {
   return (
     <Container>
       <div {...getRootProps()}>
-        <input {...getInputProps()} />
+        <input accept="audio/*" {...getInputProps()} />
         <Container textAlign="center">
           <Segment stacked>
             <Header as="h3" color="grey">

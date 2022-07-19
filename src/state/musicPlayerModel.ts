@@ -186,27 +186,27 @@ export const musicPlayerModel: MusicPlayerModelType = {
     (actions, storeActions) => actions.addAudioFile,
     async (actions, target, { getStoreState, getStoreActions }) => {
       const mySky = getStoreState().mySky.mySky;
-      if (mySky) {
-        actions.setLoading({ isLoading: true });
+      // if (mySky) {
+      //   actions.setLoading({ isLoading: true });
 
-        const response = await mySky.getJSON(
-          "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json"
-        );
-        const data = response.data;
-        console.log("THIS IS THE DATA COMING BACK FROM MYSKY", data);
-        console.log("full obj from mysky after refresh", response);
-        if (data) {
-          actions.loadAudioFiles({
-            audioFileItems: data.audioFileItems as Array<SongModel>,
-          });
-        } else {
-          await mySky.setJSON(
-            "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
-            { audioFileItems: [] }
-          );
-        }
-        actions.setLoading({ isLoading: false });
-      }
+      //   const response = await mySky.getJSON(
+      //     "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json"
+      //   );
+      //   const data = response.data;
+      //   console.log("THIS IS THE DATA COMING BACK FROM MYSKY", data);
+      //   console.log("full obj from mysky after refresh", response);
+      //   if (data) {
+      //     actions.loadAudioFiles({
+      //       audioFileItems: data.audioFileItems as Array<SongModel>,
+      //     });
+      //   } else {
+      //     await mySky.setJSON(
+      //       "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
+      //       { audioFileItems: [] }
+      //     );
+      //   }
+      //   actions.setLoading({ isLoading: false });
+      // }
     }
   ),
   onLoginChange: thunkOn(
@@ -217,27 +217,29 @@ export const musicPlayerModel: MusicPlayerModelType = {
         actions.setLoading({ isLoading: true });
 
         const mySky = target.payload.mySky;
+        console.log("THIS IS TARGET");
+        console.log(target);
         console.log("THIS IS MYSKY OBJ");
         console.log(mySky);
 
-        const response = await mySky.getJSON(
-          "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json"
-        );
-        const data = response.data;
-        console.log("THIS IS THE DATA COMING BACK FROM MYSKY", data);
-        console.log("full obj from mysky", response);
-        if (data?.audioFileItems && data?.playlists) {
-          actions.loadAudioFiles({
-            audioFileItems: data.audioFileItems as Array<SongModel>,
-          });
-          actions.loadPlaylists({ playlists: data.playlists as Playlists });
-        } else {
-          await mySky.setJSON(
-            "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
-            { audioFileItems: [], playlists: {} }
-          );
-        }
-        actions.setLoading({ isLoading: false });
+        // const response = await mySky.getJSON(
+        //   "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json"
+        // );
+        // const data = response.data;
+        // console.log("THIS IS THE DATA COMING BACK FROM MYSKY", data);
+        // console.log("full obj from mysky", response);
+        // if (data?.audioFileItems && data?.playlists) {
+        //   actions.loadAudioFiles({
+        //     audioFileItems: data.audioFileItems as Array<SongModel>,
+        //   });
+        //   actions.loadPlaylists({ playlists: data.playlists as Playlists });
+        // } else {
+        //   await mySky.setJSON(
+        //     "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
+        //     { audioFileItems: [], playlists: {} }
+        //   );
+        // }
+        // actions.setLoading({ isLoading: false });
       }
     }
   ),
