@@ -19,18 +19,18 @@ const MySkyButton = () => {
     if (mySky) {
       mySky.checkLogin().then((result) => {
         if (result) {
-          fetchUserID({ mySky });
+          fetchUserID({ mySky, fileSystem });
         }
         setLoading(false);
       });
     }
-  }, [mySky]);
+  }, [mySky, fileSystem, fetchUserID]);
 
   const onLogin = () => {
     setLoading(true);
     mySky.requestLoginAccess().then((result) => {
       if (result) {
-        fetchUserID({ mySky });
+        fetchUserID({ mySky, fileSystem });
       }
       setLoading(false);
     });

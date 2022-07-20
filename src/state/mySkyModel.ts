@@ -19,9 +19,12 @@ export interface MySkyModelType {
   loggedIn: Computed<MySkyModelType, boolean>;
   setMySky: Action<MySkyModelType, { mySky: MySky }>;
 
-  setFileSystem: Action<MySkyModelType, MySkyModelType>;
+  setFileSystem: Action<MySkyModelType, { fileSystem: FileSystemDAC }>;
 
-  setUserID: Thunk<MySkyModelType, { userID: string; mySky?: MySky }>;
+  setUserID: Thunk<
+    MySkyModelType,
+    { userID: string; mySky?: MySky; fileSystem?: FileSystemDAC }
+  >;
 
   setValidUserID: Action<MySkyModelType, { userID: string }>;
 
@@ -64,12 +67,13 @@ export const mySkyModel: MySkyModelType = {
   }),
 
   // MySky Thunks
-  fetchUserID: thunk(async (actions, { mySky }) => {
+  fetchUserID: thunk(async (actions, { mySky, fileSystem }) => {
     if (mySky) {
       actions.setMySky({ mySky });
+      actions.setFileSystem({ fileSystem });
       const userID = await mySky.userID();
       if (userID) {
-        actions.setUserID({ userID, mySky });
+        actions.setUserID({ userID, mySky, fileSystem });
       } else {
         actions.setUserID({ userID: null });
       }
@@ -88,21 +92,20 @@ export const mySkyModel: MySkyModelType = {
       storeActions.music.addNewSongToPlaylist,
     ],
     async (actions, target, { getStoreState }) => {
-      const audioFileItems = getStoreState().music.audioFileItems;
-      const playlists = getStoreState().music.playlists;
-      console.log("persisting the following", audioFileItems);
-
-      console.log("persisting the following", playlists);
-      const mySky = getStoreState().mySky.mySky;
-
-      if (mySky) {
-        console.log("persisting audio files to MySky");
-        const result = await mySky.setJSON(
-          "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
-          { audioFileItems, playlists }
-        );
-        console.log("result of clienc call", result);
-      }
+      // const audioFileItems = getStoreState().music.audioFileItems;
+      // const playlists = getStoreState().music.playlists;
+      // console.log("persisting the following", audioFileItems);
+      // console.log("persisting the following", playlists);
+      // const mySky = getStoreState().mySky.mySky;
+      // if (mySky) {
+      //   console.log("persisting audio files to MySky");
+      //   const result = await mySky.setJSON(
+      //     "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json",
+      //     { audioFileItems, playlists }
+      //   );
+      //   console.log("result of clienc call", result);
+      // }
+      // TODO: PERSIST PRELUDE TO MYSKY OR FS_DAC
     }
   ),
 

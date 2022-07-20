@@ -16,6 +16,7 @@ import Uploader from "../components/Uploader";
 import LibraryPane from "../components/LibraryPane";
 import { useStoreState } from "easy-peasy";
 import PlaylistPane from "../components/PlaylistPane";
+import Upload from "./Upload";
 
 const tabTitleStyling = {
   padding: "1em",
@@ -26,19 +27,15 @@ const panes = [
     menuItem: "My Library",
     render: () => <LibraryPane />,
   },
-  {
-    menuItem: "My Playlist",
-    render: () => <PlaylistPane />,
-  },
+  // {
+  //   menuItem: "My Playlist",
+  //   render: () => <PlaylistPane />,
+  // },
   {
     menuItem: "Upload",
     render: () => (
       <Tab.Pane>
-        <Header as="h1" color="violet" style={tabTitleStyling}>
-          Upload Your Music
-        </Header>
-        {/* @ts-ignore */}
-        <Uploader />
+        <Upload />
       </Tab.Pane>
     ),
   },

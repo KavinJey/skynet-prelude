@@ -54,7 +54,8 @@ const SkynetProvider = ({ children }) => {
         // await mySky.loadDacs(contentRecord);
         // await mySky.loadDacs(userProfile);
 
-        // await mySky.loadDacs(fileSystem);
+        // @ts-ignore
+        await mySky.loadDacs(fileSystem);
 
         // replace mySky in state object
         setSkynetState({ ...skynetState, mySky });
