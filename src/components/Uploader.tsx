@@ -164,6 +164,7 @@ const Uploader = ({ uploadMode }) => {
       }
       const onUploadProgress = (progress) => {
         const status = progress === 1 ? "processing" : "uploading";
+        console.log("file progreess", progress);
 
         onFileStateChange(file, { status, progress });
       };
@@ -201,16 +202,16 @@ const Uploader = ({ uploadMode }) => {
               onUploadProgress
             );
             const res = await fileSystem.createFile(
-              "prelude.hns/",
+              "prelude.hns/Music",
               file.name,
               response
             );
-            console.log("this is response from fs ", response, fileSystem);
+            console.log("this is response from fs ", response, res);
             const browserUrl = await client.getSkylinkUrl(response.skylink);
-            addSong({ srcLink: response.skylink, browserUrl });
+            addSong({ srcLink: response.url, browserUrl });
           }
 
-          const url = await client.getSkylinkUrl(response.skylink, {
+          const url = await client.getSkylinkUrl(response.url, {
             subdomain: mode === "directory",
           });
 

@@ -1,4 +1,5 @@
 import { action, thunkOn, actionOn, Action, Thunk, ThunkOn } from "easy-peasy";
+import { DirectoryFile } from "fs-dac-library";
 import { _Pick } from "underscore";
 import { MySkyModelType } from "./mySkyModel";
 import { StoreModel } from "./store";
@@ -38,7 +39,7 @@ export interface MusicPlayerModelType {
   clearAudioFiles: Action<MusicPlayerModelType>;
   loadAudioFiles: Action<
     MusicPlayerModelType,
-    { audioFileItems: Array<SongModel> }
+    { audioFileItems: { [k: string]: DirectoryFile } }
   >;
   loadPlaylists: Action<MusicPlayerModelType, { playlists: Playlists }>;
   addNewPlaylist: Action<
@@ -106,7 +107,8 @@ export const musicPlayerModel: MusicPlayerModelType = {
   }),
   loadAudioFiles: action((state, { audioFileItems }) => {
     console.log("This is audio files coming after login");
-    state.audioFileItems = audioFileItems;
+    console.log(audioFileItems);
+    // state.audioFileItems = audioFileItems;
   }),
 
   loadPlaylists: action((state, { playlists }) => {
@@ -216,11 +218,17 @@ export const musicPlayerModel: MusicPlayerModelType = {
       if (target.payload.userID) {
         actions.setLoading({ isLoading: true });
 
-        const mySky = target.payload.mySky;
+        const fileSystem = target.payload.fileSystem;
         console.log("THIS IS TARGET");
         console.log(target);
         console.log("THIS IS MYSKY OBJ");
-        console.log(mySky);
+        console.log(fileSystem);
+
+        if (fileSystem) {
+          const index = await fileSystem.getDirectoryIndex("prelude.hns/Music");
+          console.log("this is index", index);
+          actions.loadAudioFiles({ audioFileItems: { ...index.files } });
+        }
 
         // const response = await mySky.getJSON(
         //   "AQDRh7aTcPoRFWp6zbsMEA1an7iZx22DBhV_LVbyPPwzzA/prelude.json"
