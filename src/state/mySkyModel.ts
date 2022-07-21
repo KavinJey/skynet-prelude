@@ -85,9 +85,7 @@ export const mySkyModel: MySkyModelType = {
   }),
   persistPreludeState: thunkOn(
     (actions, storeActions) => [
-      storeActions.music.addAudioFile,
       storeActions.music.updateAudioFile,
-      storeActions.music.deleteAudioFile,
       storeActions.music.addNewPlaylist,
       storeActions.music.addNewSongToPlaylist,
     ],

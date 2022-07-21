@@ -14,9 +14,7 @@ const LibraryPane = () => {
         My Library
       </Header>
       <p> Your collection of music</p>
-      <Container>
-        <SongList />
-      </Container>
+      <Container>{/* <SongList /> */}</Container>
     </Tab.Pane>
   );
 };
