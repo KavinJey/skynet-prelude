@@ -6,7 +6,7 @@ import { useStoreState, useStoreActions, useStore } from "easy-peasy";
 import { SkynetContext } from "../state/SkynetContext";
 
 const MySkyButton = () => {
-  const { mySky, fileSystem } = useContext(SkynetContext);
+  const { mySky, fileSystem, client } = useContext(SkynetContext);
   // const [loggedIn, setLoggedIn] = useState(false); //This will get moved to global state.
   const [loading, setLoading] = useState(true); //This will get moved to global state.
   const { fetchUserID, logout } = useStoreActions((state) => state.mySky);
@@ -19,18 +19,18 @@ const MySkyButton = () => {
     if (mySky) {
       mySky.checkLogin().then((result) => {
         if (result) {
-          fetchUserID({ mySky, fileSystem });
+          fetchUserID({ mySky, fileSystem, client });
         }
         setLoading(false);
       });
     }
-  }, [mySky, fileSystem, fetchUserID]);
+  }, [mySky, fileSystem, fetchUserID, client]);
 
   const onLogin = () => {
     setLoading(true);
     mySky.requestLoginAccess().then((result) => {
       if (result) {
-        fetchUserID({ mySky, fileSystem });
+        fetchUserID({ mySky, fileSystem, client });
       }
       setLoading(false);
     });

@@ -24,22 +24,14 @@ import EditSongForm from "./EditSongForm";
 
 const SongList = () => {
   const [openSongEditModal, setSongEditModal] = useState(false);
+
   const audioFiles = useStoreState((state) => state.music.audioFileItems);
+
   const { updateAudioFile, deleteAudioFile, playSong, addToQueue } =
     useStoreActions((actions) => actions.music);
   const isPlaying = useStoreState((state) => state.music.playing);
 
   const [currentSongEdit, setCurrentSongEdit] = useState({});
-
-  //   const { client } = useContext
-
-  //   useEffect(() => {
-  //     // if we have MySky loaded
-  //     setLoading(true);
-  //     if (mySky) {
-
-  //     }
-  //   }, [mySky]);
 
   return (
     <>
@@ -56,35 +48,23 @@ const SongList = () => {
                     />
                   ) : (
                     <Placeholder
-                      style={{ height: 75, width: 75, marginRight: "2em" }}
+                      style={{ height: 50, width: 50, marginRight: "2em" }}
                     >
                       <Placeholder.Image />
                       No Image
                     </Placeholder>
                   )}
                   <h5 style={{ marginRight: "2em" }}>
-                    Name: {audioFile.songName}{" "}
+                    Name: {audioFile.name}{" "}
                   </h5>
-                  <h5>Artist: {audioFile.songArtist} </h5>
+                  <h5>Artist: {audioFile.singer} </h5>
                 </Container>
               </List.Header>
               <List.Description>
-                <a href={audioFile.srcLink}> Sia Link {audioFile.srcLink}</a>{" "}
-                <br /> <br />
-                <a href={audioFile.browserUrl}> Portal URL </a>
+                <p>{audioFile?.siaLink}</p>{" "}
                 <Segment>
                   <Menu icon="labeled">
-                    <Menu.Item
-                      name="Play Song"
-                      onClick={(event) =>
-                        playSong({
-                          name: audioFile.name,
-                          singer: audioFile.singer,
-                          musicSrc: audioFile.browserUrl,
-                          cover: audioFile.cover,
-                        })
-                      }
-                    >
+                    <Menu.Item name="Play Song">
                       {isPlaying ? (
                         <Icon name="pause circle" />
                       ) : (
@@ -92,33 +72,14 @@ const SongList = () => {
                       )}
                     </Menu.Item>
 
-                    <Menu.Item
-                      name="Edit Song"
-                      onClick={() => {
-                        setCurrentSongEdit(audioFile);
-                        setSongEditModal(true);
-                      }}
-                    >
+                    <Menu.Item name="Edit Song">
                       <Icon name="edit" />
                     </Menu.Item>
 
-                    <Menu.Item
-                      name="Delete"
-                      onClick={(event) => deleteAudioFile({ index: i })}
-                    >
+                    <Menu.Item name="Delete">
                       <Icon name="delete" />
                     </Menu.Item>
-                    <Menu.Item
-                      name="Add"
-                      onClick={(event) =>
-                        addToQueue({
-                          name: audioFile.name,
-                          singer: audioFile.singer,
-                          musicSrc: audioFile.browserUrl,
-                          cover: audioFile.cover,
-                        })
-                      }
-                    >
+                    <Menu.Item name="Add">
                       <Icon name="add" />
                     </Menu.Item>
                   </Menu>
@@ -129,27 +90,6 @@ const SongList = () => {
         ))}
         <Divider />
       </List>
-
-      <Modal
-        onClose={() => setSongEditModal(false)}
-        onOpen={() => setSongEditModal(true)}
-        open={openSongEditModal}
-      >
-        <Modal.Header>
-          Edit Song {"-" || currentSongEdit.songName} ({currentSongEdit.srcLink}
-          )
-        </Modal.Header>
-        <Modal.Content>
-          <Image size="medium" src={currentSongEdit.cover} wrapped />
-          <Modal.Description>
-            <EditSongForm
-              modalToggle={setSongEditModal}
-              audioFile={currentSongEdit}
-            />
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions></Modal.Actions>
-      </Modal>
     </>
   );
 };

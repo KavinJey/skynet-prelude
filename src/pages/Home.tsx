@@ -13,7 +13,7 @@ const HomepageHeading = ({ mobile }) => (
   <Container text style={{ paddingBottom: "3em" }}>
     <Header
       as="h1"
-      content="You're an artist and need a space to keep your WIP tunes."
+      content="Play some music"
       inverted
       style={{
         fontSize: mobile ? "2em" : "4em",

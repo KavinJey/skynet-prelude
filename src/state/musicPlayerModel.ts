@@ -1,5 +1,6 @@
 import { action, thunkOn, actionOn, Action, Thunk, ThunkOn } from "easy-peasy";
 import { DirectoryFile } from "fs-dac-library";
+import { ReactJkMusicPlayerAudioListProps } from "react-jinke-music-player";
 import { _Pick } from "underscore";
 import { MySkyModelType } from "./mySkyModel";
 import { StoreModel } from "./store";
@@ -30,14 +31,14 @@ export interface MusicPlayerModelType {
   personalLibrary: Array<any>;
   playlists: Playlists;
   audioFileItems: Object;
-  currentQueue: Array<SongModel>;
+  currentQueue: Array<ReactJkMusicPlayerAudioListProps>;
 
   setLoading: Action<MusicPlayerModelType, { isLoading: boolean }>;
   updateAudioFile: Action<MusicPlayerModelType, { i: number; elem: any }>;
   clearAudioFiles: Action<MusicPlayerModelType>;
   loadAudioFiles: Action<
     MusicPlayerModelType,
-    { audioFileItems: { [k: string]: DirectoryFile } }
+    { audioFileItems: Array<ReactJkMusicPlayerAudioListProps> }
   >;
   loadPlaylists: Action<MusicPlayerModelType, { playlists: Playlists }>;
   addNewPlaylist: Action<
@@ -174,6 +175,7 @@ export const musicPlayerModel: MusicPlayerModelType = {
         actions.setLoading({ isLoading: true });
 
         const fileSystem = target.payload.fileSystem;
+        const client = target.payload.client;
         console.log("THIS IS TARGET");
         console.log(target);
         console.log("THIS IS MYSKY OBJ");
@@ -182,12 +184,46 @@ export const musicPlayerModel: MusicPlayerModelType = {
         if (fileSystem) {
           const index = await fileSystem.getDirectoryIndex("prelude.hns/Music");
 
-          const otherIndex = await fileSystem.getDirectoryIndex(
+          const { files } = await fileSystem.getDirectoryIndex(
             "skyfs://local/fs-dac.hns/home?recursive=true"
           );
-          console.log("this is index", index);
-          console.log("this is otherIndex", otherIndex);
-          actions.loadAudioFiles({ audioFileItems: { ...index.files } });
+
+          console.log("this is files");
+          console.log(files);
+          const musicFiles: Array<DirectoryFile> = [];
+
+          for (const file in files) {
+            const potentialMusicFile = files[file];
+            if (
+              potentialMusicFile.ext?.audio ||
+              potentialMusicFile.mimeType.includes("audio")
+            ) {
+              musicFiles.push(potentialMusicFile);
+            }
+          }
+
+          console.log("all the music files");
+          console.log(musicFiles);
+
+          const musicLibraryConversion = musicFiles.map((file) => {
+            const song: ReactJkMusicPlayerAudioListProps = {
+              name: file.ext?.audio?.title,
+              format: file.ext?.audio?.format_name,
+              singer: file.ext?.audio?.artist,
+              duration: file.ext?.audio?.duration,
+              musicSrc: () => {
+                const siaLink = file.file.url;
+                console.log("this is the client");
+                console.log(client);
+                const url = client.getSkylinkUrl(siaLink);
+                return url;
+              },
+              siaLink: file.file.url,
+            };
+            return song;
+          });
+
+          actions.loadAudioFiles({ audioFileItems: musicLibraryConversion });
         }
 
         // const response = await mySky.getJSON(

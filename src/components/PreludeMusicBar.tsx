@@ -19,7 +19,7 @@ const PreludeMusicBar = ({ currentQueue }: { currentQueue: Array<any> }) => {
   return (
     <ReactJkMusicPlayer
       audioLists={currentQueue}
-      autoPlay={true}
+      autoPlay={false}
       mode={"full"}
       showDownload={false}
       spaceBar={true}

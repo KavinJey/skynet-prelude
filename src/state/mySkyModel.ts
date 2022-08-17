@@ -8,7 +8,7 @@ import {
   Thunk,
   ThunkOn,
 } from "easy-peasy";
-import { MySky } from "skynet-js";
+import { MySky, SkynetClient } from "skynet-js";
 import { FileSystemDAC } from "fs-dac-library";
 import { MusicPlayerModelType } from "./musicPlayerModel";
 import { StoreModel } from "./store";
@@ -16,6 +16,7 @@ export interface MySkyModelType {
   userID?: string;
   mySky?: MySky;
   fileSystem?: FileSystemDAC;
+  client?: SkynetClient;
   loggedIn: Computed<MySkyModelType, boolean>;
   setMySky: Action<MySkyModelType, { mySky: MySky }>;
 
@@ -23,7 +24,12 @@ export interface MySkyModelType {
 
   setUserID: Thunk<
     MySkyModelType,
-    { userID: string; mySky?: MySky; fileSystem?: FileSystemDAC }
+    {
+      userID: string;
+      mySky?: MySky;
+      fileSystem?: FileSystemDAC;
+      client?: SkynetClient;
+    }
   >;
 
   setValidUserID: Action<MySkyModelType, { userID: string }>;
@@ -41,6 +47,7 @@ export const mySkyModel: MySkyModelType = {
   userID: null, //only set through setUserID!
   mySky: null,
   fileSystem: null,
+  client: null,
   loggedIn: computed((state) => !!state.userID),
 
   // MySky Setters
@@ -67,13 +74,13 @@ export const mySkyModel: MySkyModelType = {
   }),
 
   // MySky Thunks
-  fetchUserID: thunk(async (actions, { mySky, fileSystem }) => {
+  fetchUserID: thunk(async (actions, { mySky, fileSystem, client }) => {
     if (mySky) {
       actions.setMySky({ mySky });
       actions.setFileSystem({ fileSystem });
       const userID = await mySky.userID();
       if (userID) {
-        actions.setUserID({ userID, mySky, fileSystem });
+        actions.setUserID({ userID, mySky, fileSystem, client });
       } else {
         actions.setUserID({ userID: null });
       }

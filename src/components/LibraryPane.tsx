@@ -1,5 +1,5 @@
 import React from "react";
-import { Tab, Header, Container, Card } from "semantic-ui-react";
+import { Tab, Header, Container, Card, Divider } from "semantic-ui-react";
 import SongList from "./SongList";
 import PlaylistList from "./PlaylistList";
 
@@ -14,7 +14,10 @@ const LibraryPane = () => {
         My Library
       </Header>
       <p> Your collection of music</p>
-      <Container>{/* <SongList /> */}</Container>
+      <Divider />
+      <Container>
+        <SongList />
+      </Container>
     </Tab.Pane>
   );
 };
@@ -27,7 +30,7 @@ const PlaylistPane = () => {
       </Header>
       <p> Your collection of playlists</p>
       <Container>
-        <PlaylistList />
+        <SongList />
       </Container>
     </Tab.Pane>
   );

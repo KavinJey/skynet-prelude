@@ -24,7 +24,8 @@
     "skynet-js": "^4.0.18-beta",
     "typescript": "^4.4.4",
     "underscore": "^1.13.1",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "webamp": "^1.5.0"
   },
   "scripts": {
     "ci": "npx semantic-release",

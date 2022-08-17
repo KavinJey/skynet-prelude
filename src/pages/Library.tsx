@@ -17,6 +17,7 @@ import LibraryPane from "../components/LibraryPane";
 import { useStoreState } from "easy-peasy";
 import PlaylistPane from "../components/PlaylistPane";
 import Upload from "./Upload";
+import Player from "../components/Player";
 
 const tabTitleStyling = {
   padding: "1em",
@@ -39,11 +40,19 @@ const panes = [
       </Tab.Pane>
     ),
   },
+  {
+    menuItem: "Player",
+    render: () => (
+      <Tab.Pane>
+        <Player />
+      </Tab.Pane>
+    ),
+  },
 ];
 
 const Library = () => {
   // @ts-ignore
-  const currentQueue = useStoreState((state) => state.music.currentQueue);
+  const currentQueue = useStoreState((state) => state.music.audioFileItems);
 
   useEffect(() => {}, [currentQueue]);
 
